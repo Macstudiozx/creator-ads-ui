@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase-browser';
 import { mockAccounts, mockBatch } from '@/lib/mock-data';
 import type { Account } from '@/lib/types';
 import { useAuth } from '@/components/AuthProvider';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 function batchCode() {
   const d = new Date();
@@ -85,10 +87,10 @@ export default function UploadPage() {
       <div className="stp"><span className="d">3</span><span className="t">ตรวจ & อนุมัติทีเดียว<small>ใบสรุปแผนชุดเดียว</small></span></div>
     </div>
     <div className="stage">
-      <button className="updrop" onClick={() => inputRef.current?.click()} onDrop={(e) => { e.preventDefault(); setFiles([...e.dataTransfer.files]); }} onDragOver={(e) => e.preventDefault()}>
+      <button className="updrop shad-dropzone" onClick={() => inputRef.current?.click()} onDrop={(e) => { e.preventDefault(); setFiles([...e.dataTransfer.files]); }} onDragOver={(e) => e.preventDefault()}>
         <span className="big">⇪</span><b>วางไฟล์ทั้งชุดที่นี่ — กี่ไฟล์ก็ได้</b>
         <small>วิดีโอ · รูป · carousel — upload ตรงเข้า Supabase Storage bucket creative-media ด้วย signed URL</small>
-        <span className="fake">{files.length ? `เลือกแล้ว ${files.length} ไฟล์` : 'เลือกไฟล์'}</span>
+        <Badge variant={files.length ? 'success' : 'secondary'}>{files.length ? `เลือกแล้ว ${files.length} ไฟล์` : 'เลือกไฟล์'}</Badge>
       </button>
       <input ref={inputRef} className="hidden-file" type="file" multiple onChange={e => setFiles(Array.from(e.target.files || []))} />
       <div className="ctxrow">
@@ -97,7 +99,7 @@ export default function UploadPage() {
         <label className="ctx"><small>โทนแบรนด์</small><input value={tone} onChange={e => setTone(e.target.value)} /></label>
       </div>
       <div className="ctxnote">Mock mode ทำงานได้เมื่อยังไม่มี env จริง · Supabase mode จะ insert batches + batch_items ตาม spec</div>
-      <div className="approve-bar"><button className="btn primary big" onClick={upload} disabled={uploading}>{uploading ? 'กำลังอัปโหลด…' : 'เริ่มอัปโหลดและส่งเข้า AI วิเคราะห์'}<small>{supabaseReady ? 'Supabase direct upload' : 'Mock mode'}</small></button></div>
+      <div className="approve-bar"><Button className="ui-button-big" onClick={upload} disabled={uploading}>{uploading ? 'กำลังอัปโหลด…' : 'เริ่มอัปโหลดและส่งเข้า AI วิเคราะห์'}<small>{supabaseReady ? 'Supabase direct upload' : 'Mock mode'}</small></Button></div>
       {log.length > 0 && <div className="feed" style={{marginTop:16}}>{log.map((l,i)=><div className="ln" key={i}>{l}</div>)}</div>}
     </div>
   </>;

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase-browser';
 import { useAuth } from '@/components/AuthProvider';
+import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -59,8 +60,8 @@ export default function LoginPage() {
       <div className="form-grid">
         <label>Email<input value={email} onChange={e => setEmail(e.target.value)} type="email" required /></label>
         <label>Password<input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="password ที่สร้างใน Supabase" required /></label>
-        <button className="btn primary" type="submit" disabled={loading}>{loading ? 'กำลัง login…' : 'เข้าสู่ระบบ'}</button>
-        <button className="btn ghost" type="button" disabled={loading} onClick={sendMagicLink}>ส่ง Magic Link แทน</button>
+        <Button type="submit" disabled={loading}>{loading ? 'กำลัง login…' : 'เข้าสู่ระบบ'}</Button>
+        <Button variant="ghost" type="button" disabled={loading} onClick={sendMagicLink}>ส่ง Magic Link แทน</Button>
         <div className={supabaseReady ? 'okbox' : 'errbox'}>{supabaseReady ? `Supabase connected · current role ${role}` : `Mock mode · current role ${role} · ใส่ .env.local เพื่อ login จริง`}</div>
         {message && <div className={message.includes('failed') || message.includes('rate') ? 'errbox' : 'okbox'}>{message}</div>}
       </div>
