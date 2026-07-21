@@ -21,19 +21,22 @@ export default function ReviewPage({ params }: { params: Promise<{ id: string }>
       try {
         const res = await fetch(`/api/batch/${id}/events`, { cache: 'no-store' });
         const json = await res.json();
-        if (json.proposal) { setProposal(json.proposal as Proposal); setLoadError(''); if (json.mediaUrls) setMediaUrls(json.mediaUrls); if (json.result) setResult(json.result); }
-        else setLoadError(json.error || 'ยังไม่มี proposal สำหรับ batch นี้');
+        if (json.proposal) {
+          setProposal(json.proposal as Proposal);
+          setLoadError('');
+          if (json.mediaUrls) setMediaUrls(json.mediaUrls);
+          if (json.result) setResult(json.result);
+        } else {
+          setLoadError(json.error || 'ยังไม่มี proposal สำหรับ batch นี้');
+        }
       } catch (err:any) {
         setLoadError(err?.message || 'โหลด proposal ไม่สำเร็จ');
       }
     };
-    const supabase = createClient();
-    if (!supabase) { loadServerProposal(); return; }
-    supabase.from('proposals').select('*').eq('batch_id', id).order('version', { ascending: false }).limit(1).then(({ data, error }) => {
-      const latest = Array.isArray(data) ? data[0] : null;
-      if (latest) { setProposal(latest as Proposal); setLoadError(''); }
-      else loadServerProposal();
-    });
+
+    // Load through the server route first so review pages do not depend on browser RLS/session state.
+    // The same response also returns signed Storage URLs for thumbnails.
+    loadServerProposal();
   }, [id]);
 
   useEffect(() => {
