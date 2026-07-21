@@ -2,12 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Bell, GalleryVerticalEnd, Home, LayoutDashboard, Search, ShieldCheck, UploadCloud } from 'lucide-react';
 import { AuthProvider } from '@/components/AuthProvider';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const navItems = [
-  { href: '/settings', icon: '⌂', label: 'Settings' },
-  { href: '/upload', icon: '⇧', label: 'Upload' },
-  { href: '/board', icon: '▦', label: 'Board' },
+  { href: '/settings', icon: Home, label: 'Settings' },
+  { href: '/upload', icon: UploadCloud, label: 'Upload' },
+  { href: '/board', icon: LayoutDashboard, label: 'Board' },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -28,13 +31,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-shell">
       <aside className="side-rail" aria-label="Main menu">
-        <Link className="rail-logo" href="/settings" aria-label="Creator Console Home">C</Link>
+        <Link className="rail-logo" href="/settings" aria-label="Creator Console Home">
+          <GalleryVerticalEnd size={22} strokeWidth={2.4} />
+        </Link>
         <nav className="rail-menu">
           {navItems.map((item) => {
             const active = isActive(pathname, item.href);
+            const Icon = item.icon;
             return (
               <Link key={item.href} href={item.href} title={item.label} aria-current={active ? 'page' : undefined}>
-                {item.icon}<span>{item.label}</span>
+                <Icon size={21} strokeWidth={2.3} aria-hidden="true" />
+                <span>{item.label}</span>
               </Link>
             );
           })}
@@ -50,14 +57,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="project-strip" aria-label="Project context">
-            <span className="project-chip active">Meta Ads</span>
-            <span className="project-chip">Supabase</span>
-            <span className="project-chip">Paused-first</span>
+            <Badge variant="default">Meta Ads</Badge>
+            <Badge variant="secondary">Supabase</Badge>
+            <Badge variant="success"><ShieldCheck size={14} aria-hidden="true" /> Paused-first</Badge>
           </div>
 
           <div className="right">
-            <button className="icon-btn" type="button" aria-label="Search">⌕</button>
-            <button className="icon-btn" type="button" aria-label="Notifications">◌</button>
+            <Button variant="ghost" size="icon" type="button" aria-label="Search"><Search size={18} /></Button>
+            <Button variant="ghost" size="icon" type="button" aria-label="Notifications"><Bell size={18} /></Button>
             <div className="avatar">AT</div>
           </div>
         </header>

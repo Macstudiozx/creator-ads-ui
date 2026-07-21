@@ -68,6 +68,30 @@ button:active, .btn:active, .tabs a:active, .rail-menu a:active { transform: tra
 .btn.big { min-height: 56px; padding: var(--space-6) var(--space-12); font-size: var(--font-xs); }
 .btn.big small { display: block; font-size: 12px; font-weight: 600; opacity: .86; }
 
+/* shadcn/ui-style primitives (token-backed, no Tailwind runtime required) */
+.ui-button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-3); border-radius: var(--radius-md); border: 1px solid transparent; font-size: 14px; font-weight: 700; line-height: 1; cursor: pointer; white-space: nowrap; }
+.ui-button:disabled { opacity: .5; cursor: not-allowed; }
+.ui-button-default { background: var(--brand); color: var(--text-inverse); box-shadow: 0 12px 28px rgba(0, 114, 245, .20); }
+.ui-button-default:hover { background: var(--brand-ink); }
+.ui-button-secondary { background: var(--surface-raised); color: var(--text-primary); border-color: var(--border-default); }
+.ui-button-ghost { background: var(--surface-sheet); color: var(--text-secondary); border-color: var(--border-default); }
+.ui-button-ghost:hover, .ui-button-secondary:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.ui-button-destructive { background: var(--state-risk-soft); color: var(--state-risk); border-color: color-mix(in srgb, var(--state-risk), transparent 72%); }
+.ui-button-md { padding: 0 var(--space-8); }
+.ui-button-sm { min-height: 34px; padding: 0 var(--space-5); font-size: var(--font-data); }
+.ui-button-icon { width: 44px; min-width: 44px; height: 44px; padding: 0; border-radius: var(--radius-pill); }
+.ui-badge { min-height: 30px; display: inline-flex; align-items: center; gap: var(--space-2); padding: 0 var(--space-5); border-radius: var(--radius-pill); border: 1px solid transparent; font-size: var(--font-data); font-weight: 850; white-space: nowrap; }
+.ui-badge-default { background: var(--brand-soft); color: var(--brand); border-color: color-mix(in srgb, var(--brand), transparent 70%); }
+.ui-badge-secondary { background: var(--surface-sheet); color: var(--text-tertiary); border-color: var(--border-default); }
+.ui-badge-success { background: var(--state-ok-soft); color: var(--state-ok); border-color: color-mix(in srgb, var(--state-ok), transparent 78%); }
+.ui-badge-warning { background: var(--funnel-mof-soft); color: var(--funnel-mof); border-color: color-mix(in srgb, var(--funnel-mof), transparent 78%); }
+.ui-badge-destructive { background: var(--state-risk-soft); color: var(--state-risk); border-color: color-mix(in srgb, var(--state-risk), transparent 78%); }
+.ui-card { background: var(--surface-sheet); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); overflow: hidden; }
+.ui-card-header { padding: var(--space-12); border-bottom: 1px solid var(--border-soft); }
+.ui-card-title { font-size: var(--font-xl); line-height: var(--leading-tight); letter-spacing: -.04em; }
+.ui-card-description { color: var(--text-tertiary); font-size: var(--font-data); margin-top: var(--space-2); }
+.ui-card-content { padding: var(--space-12); }
+
 /* Cards / panels */
 .panel, .health, .grand, .fgrp, .finals, .success, .auth-card, .card, .col, .updrop, .object-card, .except .issue { background: var(--surface-sheet); border: 1px solid var(--border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); overflow: hidden; }
 .panel-head, .fgrp-foot, .killrow, .grand .paused-note, .finals .approve-bar, .caplist, .caprow, .col-head { border-color: var(--border-soft); }
