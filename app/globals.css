@@ -321,8 +321,38 @@ input[type='checkbox'] { width: 22px; min-height: 22px; accent-color: var(--bran
 .scorebar .score small { display: block; margin-top: var(--space-2); color: var(--text-tertiary); font-size: var(--font-data); }
 .console.settings-console { display: grid; gap: var(--space-8); }
 
+/* ==== CI-only overflow/stacking fixes ====
+   Keep the current Operator Console layout, but make the assessment-style
+   typography safer for Thai labels, long ACT/Page IDs, and narrow panels. */
+.operator-wrap, .operator-hero, .settings-console, .list-pane, .inspect, .scorebar .score { min-width: 0; }
+.operator-hero h1, .operator-hero p, .pane-head h2, .pane-head p, .inspect h2, .inspect-top p, .scorebar .score b, .scorebar .score small { overflow-wrap: anywhere; }
+.operator-actions .refresh { max-width: 100%; min-width: 0; }
+.operator-actions .refresh button { flex: 0 0 auto; }
+.scorebar .score { min-height: 130px; }
+.scorebar .score b { font-size: clamp(20px, 1.9vw, var(--font-xl)); }
+.pane-title-row { min-width: 0; }
+.pane-title-row > div { min-width: 0; }
+.form { display: grid; gap: var(--space-8); }
+.field { min-width: 0; display: grid; gap: var(--space-3); align-content: start; }
+.field label { display: block; line-height: 1.25; overflow-wrap: anywhere; }
+.field input, .field select, .field textarea { min-width: 0; line-height: var(--leading-ui); }
+.inspector-form { gap: var(--space-8) var(--space-8); }
+.check-field { min-width: 0; line-height: 1.35; }
+.check-field input { align-self: flex-start; margin-top: 2px; }
+.account-item { min-width: 0; }
+.account-item > div { min-width: 0; }
+.account-item b { overflow-wrap: anywhere; }
+.row-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: flex-end; }
+.danger-zone > div:first-child { min-width: 240px; flex: 1 1 320px; }
+.danger-zone .row-actions { flex: 0 1 auto; }
+
 @media (max-width: 900px) {
   .settings-console, .settings-console.single-pane { grid-template-columns: 1fr; }
   .scorebar { grid-template-columns: 1fr; }
   .list-pane, .inspect { min-height: auto; }
+}
+
+@media (max-width: 1200px) {
+  .scorebar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .scorebar .score:last-child { grid-column: 1 / -1; }
 }
