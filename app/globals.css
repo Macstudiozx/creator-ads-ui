@@ -37,6 +37,10 @@ button:active, .btn:active, .tabs a:active, .rail-menu a:active { transform: tra
 .project-kicker { color: var(--text-tertiary); font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
 .project-switcher strong { color: var(--text-primary); font-size: var(--font-lg); line-height: var(--leading-tight); letter-spacing: -.02em; }
 .project-switcher small { color: var(--text-tertiary); font-size: var(--font-data); font-weight: 700; }
+.project-topbar { gap: var(--space-12); }
+.project-strip { min-width: 0; margin-left: auto; display: flex; align-items: center; justify-content: center; gap: var(--space-3); flex-wrap: wrap; }
+.project-chip { min-height: 36px; display: inline-flex; align-items: center; gap: var(--space-2); padding: 0 var(--space-6); border-radius: var(--radius-pill); background: var(--surface-sheet); border: 1px solid var(--border-default); color: var(--text-tertiary); font-size: var(--font-data); font-weight: 800; white-space: nowrap; }
+.project-chip.active { color: var(--brand); background: var(--brand-soft); border-color: color-mix(in srgb, var(--brand), transparent 70%); }
 .tabs { margin-inline: auto; display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-pill); background: var(--surface-sheet); border: 1px solid var(--border-default); box-shadow: var(--shadow-1); }
 .tabs a { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 0 22px; border-radius: var(--radius-pill); color: var(--text-secondary); text-decoration: none; font-size: 15px; font-weight: 700; }
 .tabs a:hover, .tabs a[aria-current='page'] { background: var(--brand); color: var(--text-inverse); }
