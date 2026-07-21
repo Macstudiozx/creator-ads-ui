@@ -1,0 +1,879 @@
+<title>Creator Console — Prototype ครบ Flow (2 มุมมอง)</title>
+<style>
+  :root {
+    --desk: #F2F5F6; --sheet: #FFFFFF; --sheet-2: #F8FAFB; --inset: #EBF0F2;
+    --ink: #16262E; --ink-soft: #4E6570; --ink-faint: #7C929C; --ink-mute: #A9BAC2;
+    --line: rgba(22, 38, 46, .13); --line-soft: rgba(22, 38, 46, .07); --line-strong: rgba(22, 38, 46, .26);
+    --brand: #0E7C86; --brand-ink: #0A5A62; --brand-soft: rgba(14, 124, 134, .09);
+    --cold: #3D7FBF; --cold-soft: rgba(61, 127, 191, .11);
+    --warm: #C98A2D; --warm-soft: rgba(201, 138, 45, .13);
+    --hot: #C75A33; --hot-soft: rgba(199, 90, 51, .11);
+    --ok: #2E7D4F; --ok-soft: rgba(46, 125, 79, .10);
+    --risk: #B3362B; --risk-soft: rgba(179, 54, 43, .09);
+    --rail: linear-gradient(90deg, #3D7FBF 0%, #C98A2D 52%, #C75A33 100%);
+    --scrim: rgba(22, 38, 46, .38);
+  }
+  @media (prefers-color-scheme: dark) { :root {
+    --desk: #0E181D; --sheet: #152229; --sheet-2: #1A2A32; --inset: #0F1B21;
+    --ink: #E4ECEF; --ink-soft: #9FB4BC; --ink-faint: #71888F; --ink-mute: #4D6169;
+    --line: rgba(228,236,239,.14); --line-soft: rgba(228,236,239,.07); --line-strong: rgba(228,236,239,.30);
+    --brand: #43B3BD; --brand-ink: #7BD0D8; --brand-soft: rgba(67,179,189,.13);
+    --cold: #5E9AD3; --cold-soft: rgba(94,154,211,.15);
+    --warm: #D9A44E; --warm-soft: rgba(217,164,78,.16);
+    --hot: #DA7A52; --hot-soft: rgba(218,122,82,.15);
+    --ok: #5CBE8A; --ok-soft: rgba(92,190,138,.13);
+    --risk: #E08276; --risk-soft: rgba(224,130,118,.12);
+    --rail: linear-gradient(90deg, #5E9AD3 0%, #D9A44E 52%, #DA7A52 100%);
+    --scrim: rgba(5, 12, 15, .55);
+  } }
+  :root[data-theme="dark"] {
+    --desk: #0E181D; --sheet: #152229; --sheet-2: #1A2A32; --inset: #0F1B21;
+    --ink: #E4ECEF; --ink-soft: #9FB4BC; --ink-faint: #71888F; --ink-mute: #4D6169;
+    --line: rgba(228,236,239,.14); --line-soft: rgba(228,236,239,.07); --line-strong: rgba(228,236,239,.30);
+    --brand: #43B3BD; --brand-ink: #7BD0D8; --brand-soft: rgba(67,179,189,.13);
+    --cold: #5E9AD3; --cold-soft: rgba(94,154,211,.15);
+    --warm: #D9A44E; --warm-soft: rgba(217,164,78,.16);
+    --hot: #DA7A52; --hot-soft: rgba(218,122,82,.15);
+    --ok: #5CBE8A; --ok-soft: rgba(92,190,138,.13);
+    --risk: #E08276; --risk-soft: rgba(224,130,118,.12);
+    --rail: linear-gradient(90deg, #5E9AD3 0%, #D9A44E 52%, #DA7A52 100%);
+    --scrim: rgba(5, 12, 15, .55);
+  }
+  :root[data-theme="light"] {
+    --desk: #F2F5F6; --sheet: #FFFFFF; --sheet-2: #F8FAFB; --inset: #EBF0F2;
+    --ink: #16262E; --ink-soft: #4E6570; --ink-faint: #7C929C; --ink-mute: #A9BAC2;
+    --line: rgba(22,38,46,.13); --line-soft: rgba(22,38,46,.07); --line-strong: rgba(22,38,46,.26);
+    --brand: #0E7C86; --brand-ink: #0A5A62; --brand-soft: rgba(14,124,134,.09);
+    --cold: #3D7FBF; --cold-soft: rgba(61,127,191,.11);
+    --warm: #C98A2D; --warm-soft: rgba(201,138,45,.13);
+    --hot: #C75A33; --hot-soft: rgba(199,90,51,.11);
+    --ok: #2E7D4F; --ok-soft: rgba(46,125,79,.10);
+    --risk: #B3362B; --risk-soft: rgba(179,54,43,.09);
+    --rail: linear-gradient(90deg, #3D7FBF 0%, #C98A2D 52%, #C75A33 100%);
+    --scrim: rgba(22, 38, 46, .38);
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--desk); color: var(--ink); font-family: "Sukhumvit Set", "Noto Sans Thai", "Thonburi", -apple-system, "Segoe UI", sans-serif; font-size: 14px; line-height: 1.6; }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+  button { font: inherit; }
+
+  /* ── Top bar ── */
+  .topbar { display: flex; align-items: center; gap: 16px; padding: 0 20px; height: 54px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; background: var(--desk); }
+  .logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 14.5px; white-space: nowrap; }
+  .logo .mark { width: 22px; height: 22px; border-radius: 6px; background: var(--rail); display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 800; }
+  .logo small { color: var(--ink-faint); font-weight: 500; font-size: 11.5px; }
+
+  /* ตัวสลับมุมมอง */
+  .seg { display: flex; background: var(--inset); border: 1px solid var(--line-soft); border-radius: 9px; padding: 3px; gap: 2px; }
+  .seg button { border: none; background: transparent; color: var(--ink-faint); font-size: 12.5px; font-weight: 700; padding: 5px 14px; border-radius: 7px; cursor: pointer; }
+  .seg button:hover { color: var(--ink-soft); }
+  .seg button.on { background: var(--sheet); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .seg button:focus-visible { outline: 2px solid var(--brand); }
+
+  .topbar .right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .acct { display: flex; align-items: center; gap: 8px; padding: 5px 11px; background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .acct .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+  .kswitch { display: flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 8px; font-size: 12px; font-weight: 700; background: var(--ok-soft); color: var(--ok); }
+  .kswitch .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-ink); display: grid; place-items: center; font-size: 11.5px; font-weight: 800; }
+
+  /* ── มิเตอร์ ── */
+  .strip { display: grid; grid-template-columns: 1.2fr 1fr 1.3fr; gap: 12px; padding: 14px 20px 0; max-width: 1420px; margin: 0 auto; }
+  .meter { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px 11px; }
+  .meter .lab { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint); }
+  .meter .val { display: flex; align-items: baseline; gap: 7px; margin: 1px 0 6px; }
+  .meter .val b { font-size: 16px; font-weight: 800; }
+  .meter .val span { font-size: 11.5px; color: var(--ink-faint); }
+  .bar { height: 5px; border-radius: 3px; background: var(--inset); overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 3px; background: var(--brand); transition: width .5s ease-out; }
+  .floorrow { display: flex; gap: 8px; margin-top: 5px; }
+  .floorcell { flex: 1; display: flex; align-items: center; gap: 7px; padding: 3px 9px; border-radius: 7px; font-size: 11.5px; font-weight: 700; }
+  .floorcell .t { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .floorcell.c { background: var(--cold-soft); color: var(--cold); } .floorcell.c .t { background: var(--cold); }
+  .floorcell.w { background: var(--warm-soft); color: var(--warm); } .floorcell.w .t { background: var(--warm); }
+  .floorcell.h { background: var(--risk-soft); color: var(--risk); } .floorcell.h .t { background: var(--hot); }
+  .floorcell small { font-weight: 600; opacity: .75; }
+
+  /* ── ราง flow (แสดงว่า item ที่เลือกอยู่ขั้นไหน) ── */
+  .flowrail { max-width: 1420px; margin: 12px auto 0; padding: 0 20px; }
+  .flowrail .box { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; display: flex; align-items: center; gap: 0; overflow-x: auto; }
+  .fstep { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .fstep .dotf { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 10px; font-weight: 800; background: var(--inset); color: var(--ink-mute); border: 1px solid var(--line-soft); }
+  .fstep .nm { font-size: 11.5px; font-weight: 700; color: var(--ink-mute); white-space: nowrap; }
+  .fstep.done .dotf { background: var(--brand-soft); color: var(--brand-ink); border-color: transparent; }
+  .fstep.done .nm { color: var(--ink-faint); }
+  .fstep.now .dotf { background: var(--brand); color: #fff; border-color: transparent; }
+  .fstep.now .nm { color: var(--ink); }
+  .fcon { width: 34px; height: 1.5px; background: var(--line); margin: 0 8px; flex-shrink: 0; }
+  .fcon.done { background: var(--brand); opacity: .5; }
+  .flowrail .who-item { margin-left: auto; padding-left: 16px; font-size: 11px; color: var(--ink-faint); white-space: nowrap; flex-shrink: 0; }
+  .flowrail .who-item b { color: var(--ink-soft); }
+
+  /* ═══ VIEW A: รายการ + แผน ═══ */
+  .work { display: grid; grid-template-columns: 390px 1fr; gap: 14px; padding: 14px 20px 40px; max-width: 1420px; margin: 0 auto; align-items: start; }
+  h2.col-h { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin: 4px 2px 10px; display: flex; align-items: baseline; gap: 8px; }
+  h2.col-h .cnt { color: var(--ink-mute); font-weight: 600; letter-spacing: 0; }
+
+  .drop { border: 1.5px dashed var(--line-strong); border-radius: 10px; padding: 13px 15px; display: flex; align-items: center; gap: 12px; background: var(--sheet); cursor: pointer; margin-bottom: 11px; width: 100%; text-align: left; }
+  .drop:hover { border-color: var(--brand); background: var(--brand-soft); }
+  .drop .ic { width: 34px; height: 34px; border-radius: 9px; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; font-size: 15px; flex-shrink: 0; }
+  .drop b { font-size: 13px; display: block; }
+  .drop small { color: var(--ink-faint); font-size: 11.5px; display: block; line-height: 1.5; }
+
+  .mcard { display: grid; grid-template-columns: 52px 1fr; gap: 11px; background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 11px; margin-bottom: 8px; cursor: pointer; position: relative; width: 100%; text-align: left; }
+  .mcard:hover { border-color: var(--line-strong); }
+  .mcard.sel { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); }
+  .thumb { width: 52px; height: 52px; border-radius: 8px; position: relative; overflow: hidden; display: grid; place-items: center; color: rgba(255,255,255,.92); font-size: 14px; flex-shrink: 0; }
+  .thumb.v1 { background: linear-gradient(135deg, #35586E, #6E9987); }
+  .thumb.v2 { background: linear-gradient(135deg, #7E4A33, #C7903F); }
+  .thumb.v3 { background: linear-gradient(135deg, #4E4661, #8A6E93); }
+  .thumb.v4 { background: linear-gradient(135deg, #5D7345, #A3B06A); }
+  .thumb.v5 { background: linear-gradient(135deg, #34546B, #7692B1); }
+  .thumb.v6 { background: linear-gradient(135deg, #6B4652, #B08497); }
+  .thumb .dur { position: absolute; bottom: 3px; right: 3px; background: rgba(10,18,22,.72); color: #fff; font-size: 9px; padding: 0 4px; border-radius: 3px; font-weight: 600; }
+  .fn { font-size: 12.5px; font-weight: 700; letter-spacing: -.01em; word-break: break-all; line-height: 1.4; }
+  .meta { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+  .chiprow { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 6px; }
+
+  .temp { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px 2px 6px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+  .temp .track { width: 24px; height: 4px; border-radius: 2px; background: var(--rail); position: relative; opacity: .9; }
+  .temp .track::after { content: ""; position: absolute; top: -2.5px; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--sheet); }
+  .temp.tof { background: var(--cold-soft); color: var(--cold); } .temp.tof .track::after { left: -2px; background: var(--cold); }
+  .temp.mof { background: var(--warm-soft); color: var(--warm); } .temp.mof .track::after { left: 8px; background: var(--warm); }
+  .temp.bof { background: var(--hot-soft); color: var(--hot); } .temp.bof .track::after { right: -2px; background: var(--hot); }
+
+  .prov { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 600; color: var(--ink-faint); background: var(--sheet-2); border: 1px solid var(--line-soft); padding: 2px 7px; border-radius: 999px; }
+  .prov.label { color: var(--brand-ink); background: var(--brand-soft); border-color: transparent; }
+  .statechip { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .statechip.paused { background: var(--inset); color: var(--ink-soft); }
+  .statechip.live { background: var(--ok-soft); color: var(--ok); }
+  .statechip.need { background: var(--warm-soft); color: var(--warm); }
+  .statechip.wait { background: var(--warm-soft); color: var(--warm); }
+  .analyzing { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--ink-faint); }
+  .spin { width: 11px; height: 11px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: sp .9s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+  /* แผงรายละเอียด (ขวา) */
+  .plan { background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .plan-head { display: flex; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--line-soft); align-items: flex-start; }
+  .plan-head .thumb { width: 62px; height: 62px; }
+  .plan-head h3 { font-size: 15px; font-weight: 800; letter-spacing: -.01em; word-break: break-all; }
+  .plan-head .sub { font-size: 12px; color: var(--ink-faint); margin-top: 1px; }
+  .reason { margin-top: 8px; font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; border-left: 3px solid var(--warm); background: var(--warm-soft); padding: 7px 11px; border-radius: 0 8px 8px 0; max-width: 62ch; }
+  .reason b { color: var(--ink); }
+  .plan-body { padding: 6px 18px 16px; }
+  .frow { display: grid; grid-template-columns: 142px 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); align-items: start; }
+  .frow:last-child { border-bottom: none; }
+  .frow .k { font-size: 12px; font-weight: 700; color: var(--ink-faint); padding-top: 4px; }
+  .frow .k small { display: block; font-weight: 500; color: var(--ink-mute); font-size: 10.5px; margin-top: 2px; line-height: 1.5; }
+
+  .railsel .track { height: 6px; border-radius: 3px; background: var(--rail); opacity: .35; margin: 6px 4px 0; }
+  .railsel .stops { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: -13px; }
+  .stop { background: var(--sheet); border: 1px solid var(--line); border-radius: 9px; padding: 8px 11px 7px; cursor: pointer; text-align: left; }
+  .stop:hover { border-color: var(--line-strong); }
+  .stop .nm { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; }
+  .stop .nm i { width: 9px; height: 9px; border-radius: 50%; }
+  .stop .ds { font-size: 10.5px; color: var(--ink-faint); margin-top: 1px; line-height: 1.45; }
+  .stop.tof .nm { color: var(--cold); } .stop.tof .nm i { background: var(--cold); }
+  .stop.mof .nm { color: var(--warm); } .stop.mof .nm i { background: var(--warm); }
+  .stop.bof .nm { color: var(--hot); } .stop.bof .nm i { background: var(--hot); }
+  .stop.on.mof { border-color: var(--warm); box-shadow: 0 0 0 1px var(--warm); background: var(--warm-soft); }
+  .stop.on.tof { border-color: var(--cold); box-shadow: 0 0 0 1px var(--cold); background: var(--cold-soft); }
+  .stop.on.bof { border-color: var(--hot); box-shadow: 0 0 0 1px var(--hot); background: var(--hot-soft); }
+  .railcap { font-size: 11px; color: var(--ink-faint); margin-top: 8px; }
+  .railcap b { color: var(--ink-soft); }
+
+  .audgrp { display: grid; gap: 7px; }
+  .audline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .audtag { font-size: 10px; font-weight: 800; letter-spacing: .05em; color: var(--ink-mute); width: 46px; flex-shrink: 0; }
+  .aud { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; background: var(--sheet-2); border: 1px solid var(--line); border-radius: 7px; padding: 3px 9px; }
+  .aud small { color: var(--ink-faint); font-weight: 500; }
+  .aud.new { border-style: dashed; border-color: var(--brand); background: var(--brand-soft); }
+  .aud.new .newtag { font-size: 9.5px; font-weight: 800; color: var(--brand-ink); background: var(--sheet); padding: 0 5px; border-radius: 4px; }
+  .aud.ex .x { color: var(--risk); font-weight: 800; }
+
+  .inline-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .field { display: flex; align-items: center; gap: 7px; background: var(--inset); border: 1px solid var(--line-soft); border-radius: 8px; padding: 5px 11px; }
+  .field:focus-within { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand-soft); }
+  .field label { font-size: 10.5px; font-weight: 700; color: var(--ink-faint); }
+  .field input { border: none; background: transparent; color: var(--ink); font: inherit; font-weight: 800; width: 78px; outline: none; }
+  .hint { font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+  .hint b { color: var(--brand-ink); font-weight: 700; }
+
+  .namebox { background: var(--inset); border: 1px solid var(--line-soft); border-radius: 8px; padding: 8px 11px; font-size: 12px; line-height: 1.8; word-break: break-all; }
+  .namebox .seg-p { background: var(--warm-soft); color: var(--warm); font-weight: 800; padding: 0 3px; border-radius: 3px; }
+  .namebox .seg-s { color: var(--warm); font-weight: 800; }
+  .namebox .lock { float: right; font-size: 10px; color: var(--ink-mute); font-weight: 600; font-family: "Sukhumvit Set", "Noto Sans Thai", sans-serif; }
+
+  .checks { display: grid; gap: 5px; }
+  .chk { display: flex; gap: 8px; align-items: baseline; font-size: 12px; }
+  .chk .s { font-weight: 800; flex-shrink: 0; width: 15px; text-align: center; }
+  .chk.pass .s { color: var(--ok); }
+  .chk.info .s { color: var(--ink-mute); }
+  .chk small { color: var(--ink-faint); }
+
+  .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 13px 18px; background: var(--sheet-2); border-top: 1px solid var(--line-soft); }
+  .btn { font-size: 13px; font-weight: 700; border-radius: 8px; cursor: pointer; padding: 8px 15px; border: 1px solid transparent; }
+  .btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .btn.primary { background: var(--brand); color: #fff; text-align: left; }
+  .btn.primary:hover { background: var(--brand-ink); }
+  .btn.primary small { display: block; font-size: 10px; font-weight: 600; opacity: .82; }
+  .btn.ghost { background: var(--sheet); border-color: var(--line); color: var(--ink-soft); }
+  .btn.ghost:hover { border-color: var(--line-strong); color: var(--ink); }
+  .btn.danger { background: transparent; color: var(--risk); }
+  .btn.danger:hover { background: var(--risk-soft); }
+  .btn.go { background: var(--ok); color: #fff; }
+  .btn.go:hover { filter: brightness(.92); }
+  .actions .gap { flex: 1; }
+
+  /* แผงสถานะอื่นของ view A */
+  .bigstate { padding: 42px 24px; text-align: center; color: var(--ink-faint); }
+  .bigstate .ic { font-size: 30px; margin-bottom: 8px; }
+  .bigstate b { color: var(--ink-soft); display: block; font-size: 14px; }
+  .verifylist { display: grid; gap: 6px; padding: 4px 0 2px; }
+  .kpirow { display: flex; gap: 22px; }
+  .kpi .n { font-size: 17px; font-weight: 800; }
+  .kpi .l { font-size: 10.5px; color: var(--ink-faint); font-weight: 600; letter-spacing: .04em; }
+  .expressway { font-size: 11px; font-weight: 700; color: var(--brand-ink); background: var(--brand-soft); padding: 2.5px 9px; border-radius: 999px; display: inline-flex; gap: 5px; align-items: center; }
+  .handoff { font-size: 12px; color: var(--ink-faint); background: var(--sheet-2); border: 1px dashed var(--line); border-radius: 8px; padding: 9px 13px; line-height: 1.6; }
+  .handoff b { color: var(--ink-soft); }
+
+  /* ═══ VIEW B: Kanban ═══ */
+  .boardwrap { max-width: 1420px; margin: 0 auto; padding: 14px 20px 40px; }
+  .board { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; align-items: flex-start; }
+  .col { width: 316px; flex-shrink: 0; }
+  .col-head { display: flex; align-items: baseline; gap: 8px; padding: 4px 6px 10px; }
+  .col-head .step { font-size: 10px; font-weight: 800; color: var(--ink-mute); }
+  .col-head h2 { font-size: 12.5px; font-weight: 800; letter-spacing: .05em; }
+  .col-head .cnt { font-size: 11.5px; color: var(--ink-faint); font-weight: 600; }
+  .col-head .note { margin-left: auto; font-size: 10px; font-weight: 700; }
+  .col-head .note.gate { color: var(--brand-ink); }
+  .col-head .note.money { color: var(--ok); }
+  .lane { display: grid; gap: 8px; min-height: 40px; }
+  .card { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; position: relative; }
+  .card.click { cursor: pointer; }
+  .card.click:hover { border-color: var(--line-strong); }
+  .card.plan-c { border-left: 3px solid var(--warm); }
+  .card.live-c { border-left: 3px solid var(--ok); }
+  .mrow { display: flex; gap: 10px; }
+  .mrow .thumb { width: 44px; height: 44px; }
+  .reason-s { font-size: 11px; color: var(--ink-soft); line-height: 1.55; margin-top: 8px; padding: 6px 9px; background: var(--warm-soft); border-radius: 7px; }
+  .reason-s b { color: var(--ink); }
+  .specs { display: grid; gap: 3px; margin-top: 8px; }
+  .spec { display: flex; gap: 7px; font-size: 11px; align-items: baseline; }
+  .spec .k { color: var(--ink-mute); width: 36px; flex-shrink: 0; font-weight: 700; font-size: 10px; }
+  .spec .v { color: var(--ink-soft); }
+  .spec .v b { color: var(--ink); font-weight: 700; }
+  .gatecheck { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .gc { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
+  .gc.pass { background: var(--ok-soft); color: var(--ok); }
+  .gc.info { background: var(--inset); color: var(--ink-faint); }
+  .cardacts { display: flex; gap: 7px; margin-top: 10px; }
+  .cardacts .btn { font-size: 11.5px; padding: 5px 11px; }
+  .cardacts .btn.primary { flex: 1; text-align: center; }
+  .subcap { font-size: 9.5px; color: var(--ink-mute); text-align: center; margin-top: 5px; }
+  .who { font-size: 10.5px; color: var(--ink-faint); margin-top: 7px; }
+  .aging { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; color: var(--warm); background: var(--warm-soft); padding: 2px 7px; border-radius: 999px; }
+  .namebox-s { font-size: 10.5px; line-height: 1.7; word-break: break-all; background: var(--inset); border-radius: 7px; padding: 6px 9px; margin-top: 8px; }
+  .livedot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); flex-shrink: 0; display: inline-block; }
+  .kpirow-s { display: flex; gap: 13px; margin-top: 8px; }
+  .kpirow-s .kpi .n { font-size: 13.5px; }
+  .revlink { font-size: 10.5px; color: var(--risk); font-weight: 700; text-decoration: none; cursor: pointer; background: none; border: none; padding: 0; }
+  .revlink:hover { text-decoration: underline; }
+  .colfoot { text-align: center; font-size: 10.5px; color: var(--ink-mute); padding: 8px 4px 2px; line-height: 1.5; }
+  .dropcard { border: 1.5px dashed var(--line-strong); border-radius: 10px; background: transparent; padding: 11px; display: flex; gap: 10px; align-items: center; cursor: pointer; width: 100%; text-align: left; }
+  .dropcard:hover { border-color: var(--brand); background: var(--brand-soft); }
+  .dropcard .ic { width: 30px; height: 30px; border-radius: 8px; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
+  .dropcard b { font-size: 12px; display: block; }
+  .dropcard small { color: var(--ink-faint); font-size: 10.5px; line-height: 1.45; display: block; }
+
+  /* ── Modal ── */
+  .scrim { position: fixed; inset: 0; background: var(--scrim); display: none; place-items: center; z-index: 50; padding: 20px; }
+  .scrim.show { display: grid; }
+  .modal { background: var(--sheet); border: 1px solid var(--line); border-radius: 14px; width: min(430px, 100%); padding: 20px 22px; box-shadow: 0 18px 50px rgba(0,0,0,.22); }
+  .modal h4 { font-size: 15.5px; font-weight: 800; margin-bottom: 4px; }
+  .modal .mbody { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
+  .modal .msum { background: var(--inset); border-radius: 9px; padding: 10px 13px; margin: 12px 0; font-size: 12.5px; display: grid; gap: 3px; }
+  .modal .msum .r { display: flex; justify-content: space-between; gap: 12px; }
+  .modal .msum .r span { color: var(--ink-faint); }
+  .modal .msum .r b { font-weight: 700; text-align: right; word-break: break-all; }
+  .modal .macts { display: flex; gap: 9px; margin-top: 16px; }
+  .modal .macts .btn { flex: 1; text-align: center; }
+
+  /* ── Toast ── */
+  .toasts { position: fixed; bottom: 18px; right: 18px; display: grid; gap: 8px; z-index: 60; max-width: 340px; }
+  .toast { background: var(--ink); color: var(--desk); border-radius: 10px; padding: 10px 15px; font-size: 12.5px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.25); display: flex; gap: 9px; align-items: baseline; animation: rise .25s ease-out; }
+  .toast .tic { font-weight: 800; }
+  .toast.ok .tic { color: #7ADFA8; }
+  .toast.info .tic { color: #7BD0D8; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+  @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+  @media (max-width: 940px) {
+    .strip { grid-template-columns: 1fr; }
+    .work { grid-template-columns: 1fr; }
+    .flowrail .who-item { display: none; }
+  }
+</style>
+
+<!-- ═══════════ Top bar ═══════════ -->
+<header class="topbar">
+  <div class="logo"><span class="mark">C</span> Creator Console <small>meta-ads-creator</small></div>
+  <div class="seg" role="tablist" aria-label="สลับมุมมอง">
+    <button id="segList" class="on" onclick="setView('list')">🗂 รายการ + แผน</button>
+    <button id="segBoard" onclick="setView('board')">📋 บอร์ดสายพาน</button>
+  </div>
+  <div class="right">
+    <div class="acct"><span class="dot"></span> DRJADE — Main ▾</div>
+    <div class="kswitch"><span class="pulse"></span> ระบบปกติ</div>
+    <div class="avatar">ตั้ม</div>
+  </div>
+</header>
+
+<!-- ═══════════ มิเตอร์ ═══════════ -->
+<div class="strip">
+  <div class="meter">
+    <div class="lab">เพซเป้าเดือนกรกฎา</div>
+    <div class="val"><b class="mono">฿123,400</b><span>/ ฿300,000 · วันที่ 14/31 — <b style="color:var(--ok);font-size:11.5px">ตามเพซ</b></span></div>
+    <div class="bar"><i style="width:41%"></i></div>
+  </div>
+  <div class="meter">
+    <div class="lab">เพดานเปิดยิงอัตโนมัติวันนี้</div>
+    <div class="val"><b class="mono" id="autoSpend">฿480</b><span id="autoCnt">/ 2,000 · เปิดไป 1 จาก 3 ตัว</span></div>
+    <div class="bar"><i id="autoBar" style="width:24%"></i></div>
+  </div>
+  <div class="meter">
+    <div class="lab">โฆษณาวิ่งอยู่จริง ต่อชั้น (ขั้นต่ำ 2)</div>
+    <div class="floorrow" id="floorRow"></div>
+  </div>
+</div>
+
+<!-- ═══════════ ราง flow ═══════════ -->
+<div class="flowrail"><div class="box" id="flowBox"></div></div>
+
+<!-- ═══════════ VIEW A ═══════════ -->
+<main class="work" id="viewList">
+  <aside>
+    <h2 class="col-h">สื่อ & แคมเปญ <span class="cnt" id="listCnt"></span></h2>
+    <button class="drop" onclick="simUpload()">
+      <span class="ic">⇪</span>
+      <span><b>วางไฟล์ / คลิกเพื่อจำลองอัปโหลด</b><small>วิดีโอ · รูป — AI วิเคราะห์แล้วเสนอแผนให้อนุมัติ</small></span>
+    </button>
+    <div id="mediaList"></div>
+  </aside>
+  <section>
+    <h2 class="col-h" id="detailTitle">รายละเอียด</h2>
+    <div id="detailPane"></div>
+  </section>
+</main>
+
+<!-- ═══════════ VIEW B ═══════════ -->
+<div class="boardwrap" id="viewBoard" style="display:none">
+  <div class="board">
+    <section class="col">
+      <div class="col-head"><span class="step">01</span><h2>สื่อเข้าใหม่</h2><span class="cnt" id="c1n"></span></div>
+      <div class="lane" id="lane1">
+        <button class="dropcard" onclick="simUpload()">
+          <span class="ic">⇪</span>
+          <span><b>วางไฟล์ / คลิกจำลองอัปโหลด</b><small>AI วิเคราะห์ให้เอง</small></span>
+        </button>
+        <div id="lane1cards"></div>
+      </div>
+    </section>
+    <section class="col">
+      <div class="col-head"><span class="step">02</span><h2>รอคุณอนุมัติแผน</h2><span class="cnt" id="c2n"></span><span class="note gate">← จุดตัดสินของคน</span></div>
+      <div class="lane" id="lane2"></div>
+    </section>
+    <section class="col">
+      <div class="col-head"><span class="step">03</span><h2>สร้างแล้ว · พักไว้</h2><span class="cnt" id="c3n"></span><span class="note" style="color:var(--ink-mute)">ยังไม่ใช้เงิน</span></div>
+      <div class="lane" id="lane3"></div>
+    </section>
+    <section class="col">
+      <div class="col-head"><span class="step">04</span><h2>เปิดยิงแล้ว</h2><span class="cnt" id="c4n"></span><span class="note money">เงินกำลังทำงาน</span></div>
+      <div class="lane" id="lane4"></div>
+      <div class="colfoot">หลังจากนี้ระบบดูแลผล (regen) เฝ้า kill/scale ต่อ —<br>บอร์ดนี้ดูแลแค่ "การเกิด" ของโฆษณา</div>
+    </section>
+  </div>
+</div>
+
+<!-- Modal + Toast -->
+<div class="scrim" id="scrim"><div class="modal" id="modal"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+/* ═══════════ ข้อมูล ═══════════ */
+const FUNNEL = {
+  tof: { nm: 'TOF', th: 'ลูกค้าใหม่', cls: 'tof' },
+  mof: { nm: 'MOF', th: 'เคยสนใจ', cls: 'mof' },
+  bof: { nm: 'BOF', th: 'ใกล้ซื้อ', cls: 'bof' },
+};
+let items = [
+  { id:'i1', fn:'review_khun_mae_v3.mp4', thumb:'v1', dur:'0:34', up:'มิ้นท์ · 09:12', state:'proposed',
+    funnel:'mof', prov:'vision', conf:82,
+    reason:'รีวิวจากผู้ใช้จริง + ให้ความรู้เรื่องอาการ ไม่มีการพูดถึงราคา — เหมาะคนรู้จักแบรนด์แล้วแต่ยังไม่ตัดสินใจ',
+    aud:{ inc:[['คนมีส่วนร่วมเพจ/IG','365 วัน · ของเดิมในบัญชี',false],['คนดูวิดีโอ >50%','180 วัน · จากเพจ DRJADE',true]], exc:[['คนซื้อใน 7 วัน','จาก Pixel']] },
+    budget:1200, hint:'ผู้ชนะ MOF 4 ตัวใน 90 วัน เริ่มที่ ฿1,000–1,500 · ROAS เฉลี่ย 2.4',
+    start:'พรุ่งนี้ 06:00', promo:'7.7', angle:'Educate', hook:'รีวิว', fmt:'VDO', adno:'AD000131' },
+  { id:'i2', fn:'DRJADE-7.7-BOF-Promotion-โปรรวม-VDO.mp4', thumb:'v2', dur:'0:21', up:'มิ้นท์ · 09:10', state:'proposed',
+    funnel:'bof', prov:'label', conf:100,
+    reason:null,
+    aud:{ inc:[['คนเคยทักแชท','365 วัน · ของเดิม',false],['คนมีส่วนร่วม 30 วัน','ของเดิม',false],['คนเพิ่งซื้อ','cross-sell',false]], exc:[['คนซื้อใน 7 วัน','จาก Pixel']] },
+    budget:1500, hint:'ตามสูตร BOF Hero — ช่องที่กำไรสุดในประวัติ',
+    start:'พรุ่งนี้ 06:00', promo:'7.7', angle:'Promotion', hook:'โปรโมชัน', fmt:'VDO', adno:'AD000132' },
+  { id:'i3', fn:'knee_pain_hook_final.mp4', thumb:'v3', dur:'0:45', up:'บอส · 09:15', state:'analyzing' },
+  { id:'i4', fn:'before_after_04.jpg', thumb:'v4', dur:null, up:'บอส · 08:58', state:'needs' },
+  { id:'i5', fn:'DRJADE - 7.7 - TOF - Acquire - PainPoint - VDO - AD000129 - V01 - 14/07/26', thumb:'v5', dur:'0:30', up:'', state:'paused',
+    funnel:'tof', budget:1000, approvedBy:'ตั้ม · วันนี้ 08:52', aging:0,
+    promo:'7.7', angle:'Acquire', hook:'PainPoint', fmt:'VDO', adno:'AD000129' },
+  { id:'i6', fn:'DRJADE - MOF - Educate - ให้ความรู้ - VDO - AD000121 - V01 - 10/07/26', thumb:'v6', dur:'0:41', up:'', state:'paused',
+    funnel:'mof', budget:1200, approvedBy:'มิ้นท์ · 10 ก.ค.', aging:4,
+    promo:null, angle:'Educate', hook:'ให้ความรู้', fmt:'VDO', adno:'AD000121' },
+  { id:'i7', fn:'DRJADE - BOF - Promotion - โปรโมชัน - VDO - AD000114 - V03', thumb:'v2', dur:'0:19', up:'', state:'live',
+    funnel:'bof', budget:480, via:'express', openedAt:'08:47',
+    kpis:[['฿480','ใช้ไปวันนี้'],['2.8','ROAS เดิมที่พิสูจน์'],['08:47','เปิดเมื่อ']] },
+  { id:'i8', fn:'DRJADE - 7.7 - TOF - Acquire - รีวิว - VDO - AD000127 - V01', thumb:'v1', dur:'0:26', up:'', state:'live',
+    funnel:'tof', budget:1000, via:'human', opener:'ตั้ม · เมื่อวาน 14:20',
+    kpis:[['฿1,940','ใช้ไปสะสม'],['61','คนทักแชท'],['฿31.8','ต่อ 1 คนทัก']] },
+];
+let view = 'list', sel = 'i1', upCount = 0;
+
+/* ═══════════ helpers ═══════════ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const item = id => items.find(i => i.id === id);
+const fmtB = n => '฿' + n.toLocaleString('th-TH');
+function tempChip(f){ const F = FUNNEL[f]; return `<span class="temp ${F.cls}"><span class="track"></span> ${F.nm} · ${F.th}</span>`; }
+function provChip(it){
+  if (it.prov === 'label') return `<span class="prov label">🏷 ป้ายไฟล์ — ไม่ต้องเดา</span>`;
+  if (it.prov === 'vision') return `<span class="prov">👁 สายตา AI · มั่นใจ ${it.conf}%</span>`;
+  return '';
+}
+function cname(it){
+  const promo = it.promo ? `<span class="seg-p">${it.promo}</span> - ` : '';
+  return `DRJADE - ${promo}<span class="seg-s">${FUNNEL[it.funnel].nm}</span> - ${it.angle} - ${it.hook} - ${it.fmt} - ${it.adno} - V01 - 15/07/26`;
+}
+function cnamePlain(it){
+  return `DRJADE${it.promo ? ' - ' + it.promo : ''} - ${FUNNEL[it.funnel].nm} - ${it.angle} - ${it.hook} - ${it.fmt} - ${it.adno}`;
+}
+function toast(msg, kind='ok'){
+  const t = document.createElement('div');
+  t.className = 'toast ' + kind;
+  t.innerHTML = `<span class="tic">${kind === 'ok' ? '✓' : '•'}</span><span>${msg}</span>`;
+  $('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 4200);
+}
+function askConfirm({title, body, sum, cta, kind, onok}){
+  const m = $('modal');
+  m.innerHTML = `
+    <h4>${title}</h4>
+    <div class="mbody">${body}</div>
+    ${sum ? `<div class="msum">${sum.map(r => `<div class="r"><span>${r[0]}</span><b class="mono">${r[1]}</b></div>`).join('')}</div>` : ''}
+    <div class="macts">
+      <button class="btn ghost" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn ${kind || 'primary'}" id="mok">${cta}</button>
+    </div>`;
+  $('scrim').classList.add('show');
+  $('mok').onclick = () => { closeModal(); onok(); };
+}
+function closeModal(){ $('scrim').classList.remove('show'); }
+$('scrim').addEventListener('click', e => { if (e.target === $('scrim')) closeModal(); });
+
+/* ═══════════ actions (flow จริง) ═══════════ */
+function simUpload(){
+  upCount++;
+  const id = 'u' + upCount;
+  items.unshift({ id, fn:`testimonial_batch2_0${upCount}.mp4`, thumb:'v5', dur:'0:28', up:'คุณ · เมื่อสักครู่', state:'analyzing' });
+  sel = id; render();
+  toast('อัปโหลดแล้ว — ส่งเข้าคิววิเคราะห์', 'info');
+  setTimeout(() => {
+    const it = item(id); if (!it || it.state !== 'analyzing') return;
+    Object.assign(it, {
+      state:'proposed', funnel:'mof', prov:'vision', conf:78,
+      reason:'คำสัมภาษณ์ผู้ใช้ + เล่าผลลัพธ์ ไม่มีข้อเสนอราคา — โทนตอกย้ำความเชื่อมั่น เหมาะคนเคยสนใจ',
+      aud:{ inc:[['คนมีส่วนร่วมเพจ/IG','365 วัน · ของเดิมในบัญชี',false],['คนดูวิดีโอ >50%','180 วัน · จากเพจ DRJADE',true]], exc:[['คนซื้อใน 7 วัน','จาก Pixel']] },
+      budget:1000, hint:'ผู้ชนะ MOF เริ่มที่ ฿1,000–1,500', start:'พรุ่งนี้ 06:00',
+      promo:'7.7', angle:'Educate', hook:'รีวิว', fmt:'VDO', adno:'AD0001' + (32 + upCount),
+    });
+    render();
+    toast('วิเคราะห์เสร็จ — AI เสนอ MOF (มั่นใจ 78%) รอคุณอนุมัติ');
+  }, 2600);
+}
+function approve(id){
+  const it = item(id);
+  askConfirm({
+    title:'ยืนยันการสร้าง (แบบพักไว้)',
+    body:'ระบบจะสร้างจริงบน Meta เป็น<b>สถานะพัก</b> — ยังไม่ใช้เงินจนกว่าคุณจะกดเปิดในขั้นถัดไป',
+    sum:[['แคมเปญ', cnamePlain(it)], ['ชั้น', FUNNEL[it.funnel].nm + ' · ' + FUNNEL[it.funnel].th], ['งบ/วัน', fmtB(it.budget)], ['เริ่ม', it.start || '—']],
+    cta:'อนุมัติ — สร้างแบบพัก',
+    onok(){
+      it.state = 'creating'; render();
+      toast('กำลังสร้างบน Meta…', 'info');
+      setTimeout(() => {
+        it.state = 'paused'; it.approvedBy = 'คุณ · เมื่อสักครู่'; it.aging = 0;
+        it.fn = cnamePlain(it) + ' - V01 - 15/07/26';
+        render();
+        toast('สร้างสำเร็จ ✓ ตรวจกลับจาก Meta แล้ว — พักไว้ ยังไม่ใช้เงิน');
+      }, 1400);
+    }
+  });
+}
+function reject(id){
+  const it = item(id);
+  askConfirm({
+    title:'ปฏิเสธแผนนี้?',
+    body:`สื่อ <b>${esc(it.fn)}</b> จะถูกนำออกจากคิว — ระบบจะจดจำไว้เพื่อเสนอแม่นขึ้นครั้งหน้า`,
+    cta:'ปฏิเสธ', kind:'danger',
+    onok(){
+      items = items.filter(x => x.id !== id);
+      if (sel === id) sel = items[0]?.id;
+      render();
+      toast('ปฏิเสธแล้ว — บันทึกเหตุผลลง log เพื่อการเรียนรู้', 'info');
+    }
+  });
+}
+function openFire(id){
+  const it = item(id);
+  askConfirm({
+    title:'เปิดยิง — เงินจะเริ่มออก',
+    body:'ยืนยันแล้วโฆษณาจะเริ่มวิ่งทันที และ<b>ส่งต่อให้ระบบดูแลผล (regen)</b> เฝ้า kill/scale ต่อโดยอัตโนมัติ',
+    sum:[['แคมเปญ', cnamePlain(it)], ['งบ/วัน', fmtB(it.budget)]],
+    cta:'ยืนยัน — เปิดยิง', kind:'go',
+    onok(){
+      it.state = 'live'; it.via = 'human'; it.opener = 'คุณ · เมื่อสักครู่';
+      it.kpis = [['฿0','ใช้ไปวันนี้'], ['—','รอข้อมูลแรก'], ['ตอนนี้','เปิดเมื่อ']];
+      render();
+      toast('เปิดยิงแล้ว 🟢 ส่งต่อให้ระบบดูแลผลเฝ้าต่อ — จบหน้าที่ของ Creator');
+    }
+  });
+}
+function pauseBack(id){
+  const it = item(id);
+  askConfirm({
+    title:'สั่งพัก (คำสั่งย้อนกลับ)',
+    body:'โฆษณาจะหยุดใช้เงินทันที และกลับไปอยู่สถานะพักไว้',
+    cta:'สั่งพัก', kind:'danger',
+    onok(){
+      it.state = 'paused'; it.approvedBy = (it.via === 'express' ? 'ทางด่วนอัตโนมัติ (ถูกสั่งพักโดยคุณ)' : 'คุณ'); it.aging = 0; it.via = null;
+      render();
+      toast('สั่งพักแล้ว — หยุดใช้เงินทันที', 'info');
+    }
+  });
+}
+function setView(v){
+  view = v;
+  $('segList').classList.toggle('on', v === 'list');
+  $('segBoard').classList.toggle('on', v === 'board');
+  $('viewList').style.display = v === 'list' ? '' : 'none';
+  $('viewBoard').style.display = v === 'board' ? '' : 'none';
+}
+function pick(id){ sel = id; render(); }
+
+/* ═══════════ ราง flow ═══════════ */
+const STEPS = [['อัปโหลด'],['AI วิเคราะห์'],['คุณอนุมัติ'],['สร้าง · พักไว้'],['เปิดยิง'],['ส่งต่อระบบดูแลผล']];
+function stageOf(it){
+  if (!it) return -1;
+  if (it.state === 'needs') return 1;
+  if (it.state === 'analyzing') return 1;
+  if (it.state === 'proposed') return 2;
+  if (it.state === 'creating') return 3;
+  if (it.state === 'paused') return 3;
+  if (it.state === 'live') return 5;
+  return 0;
+}
+function renderRail(){
+  const it = item(sel);
+  const now = stageOf(it);
+  let html = STEPS.map((s, i) => {
+    const cls = i < now ? 'done' : i === now ? 'now' : '';
+    const con = i ? `<span class="fcon ${i <= now ? 'done' : ''}"></span>` : '';
+    return con + `<span class="fstep ${cls}"><span class="dotf">${i < now ? '✓' : i + 1}</span><span class="nm">${s[0]}</span></span>`;
+  }).join('');
+  html += `<span class="who-item">กำลังติดตาม: <b>${it ? esc(it.fn.slice(0, 42)) : '—'}</b></span>`;
+  $('flowBox').innerHTML = html;
+}
+
+/* ═══════════ VIEW A render ═══════════ */
+function stateChipA(it){
+  if (it.state === 'analyzing') return `<span class="analyzing"><span class="spin"></span> กำลังวิเคราะห์…</span>`;
+  if (it.state === 'needs') return `<span class="statechip need">✎ รอแคปชั่น</span>`;
+  if (it.state === 'proposed') return tempChip(it.funnel) + ' ' + provChip(it) + ' <span class="statechip wait">รออนุมัติ</span>';
+  if (it.state === 'creating') return `<span class="analyzing"><span class="spin"></span> กำลังสร้างบน Meta…</span>`;
+  if (it.state === 'paused') return tempChip(it.funnel) + ` <span class="statechip paused">⏸ พักไว้${it.aging >= 3 ? ' · ' + it.aging + ' วัน!' : ''}</span>`;
+  if (it.state === 'live') return tempChip(it.funnel) + ` <span class="statechip live">● เปิดยิงแล้ว</span>`;
+  return '';
+}
+function renderList(){
+  $('listCnt').textContent = items.length + ' รายการ';
+  $('mediaList').innerHTML = items.map(it => `
+    <button class="mcard ${sel === it.id ? 'sel' : ''}" onclick="pick('${it.id}')">
+      <span class="thumb ${it.thumb}">${it.dur ? '▶' : '🖼'}${it.dur ? `<span class="dur">${it.dur}</span>` : ''}</span>
+      <span>
+        <span class="fn">${esc(it.fn)}</span>
+        ${it.up ? `<span class="meta" style="display:block">${esc(it.up)}</span>` : ''}
+        <span class="chiprow">${stateChipA(it)}</span>
+      </span>
+    </button>`).join('');
+  renderDetail();
+}
+function renderDetail(){
+  const it = item(sel);
+  const pane = $('detailPane');
+  if (!it){ pane.innerHTML = `<div class="plan"><div class="bigstate"><div class="ic">🗂</div><b>เลือกรายการทางซ้าย</b></div></div>`; $('detailTitle').textContent = 'รายละเอียด'; return; }
+
+  if (it.state === 'analyzing' || it.state === 'creating'){
+    $('detailTitle').textContent = it.state === 'analyzing' ? 'กำลังวิเคราะห์' : 'กำลังสร้าง';
+    pane.innerHTML = `<div class="plan"><div class="bigstate">
+      <div class="ic">${it.state === 'analyzing' ? '👁' : '⚙️'}</div>
+      <b>${it.state === 'analyzing' ? 'AI กำลังดูเนื้อหาสื่อ + ถอดเสียงพูด' : 'กำลังยิงคำสั่งสร้างไปที่ Meta (สถานะพัก)'}</b>
+      <div style="margin-top:6px;font-size:12px">${it.state === 'analyzing' ? 'เสร็จแล้วจะเสนอชั้นกลุ่มเป้าหมายพร้อมเหตุผลให้ตรวจ' : 'สร้างเสร็จจะตรวจกลับ (read-back) ก่อนรายงานเสมอ'}</div>
+      <div style="margin-top:14px" class="analyzing" >&nbsp;<span class="spin"></span>&nbsp;</div>
+    </div></div>`;
+    return;
+  }
+  if (it.state === 'needs'){
+    $('detailTitle').textContent = 'ต้องการข้อมูลเพิ่ม';
+    pane.innerHTML = `<div class="plan"><div class="bigstate">
+      <div class="ic">✎</div><b>ภาพเดี่ยววิเคราะห์ได้ไม่พอ — ขอแคปชั่นประกอบ</b>
+      <div style="margin-top:6px;font-size:12px;max-width:46ch;margin-inline:auto">AI ไม่เดาชั้นกลุ่มเป้าหมายจากข้อมูลที่ไม่พอ (กฎความปลอดภัย) — พิมพ์แคปชั่นที่จะใช้คู่ภาพนี้ แล้วระบบจะวิเคราะห์ต่อให้</div>
+      <div style="margin-top:14px"><button class="btn ghost">ใส่แคปชั่น…</button></div>
+    </div></div>`;
+    return;
+  }
+  if (it.state === 'proposed'){
+    $('detailTitle').textContent = 'แผนที่ AI เสนอ — รอการอนุมัติของคุณ';
+    const inc = it.aud.inc.map(a => a[2]
+      ? `<span class="aud new"><span class="newtag">สร้างใหม่</span> ${a[0]} <small>· ${a[1]}</small></span>`
+      : `<span class="aud">${a[0]} <small>· ${a[1]}</small></span>`).join('');
+    const exc = it.aud.exc.map(a => `<span class="aud ex"><span class="x">−</span> ${a[0]} <small>· ${a[1]}</small></span>`).join('');
+    pane.innerHTML = `<div class="plan">
+      <div class="plan-head">
+        <span class="thumb ${it.thumb}">▶${it.dur ? `<span class="dur">${it.dur}</span>` : ''}</span>
+        <div>
+          <h3>${esc(it.fn)}</h3>
+          <div class="sub">${it.dur ? 'วิดีโอ ' + it.dur.replace('0:','') + ' วิ · มีเสียงพูด (ถอดความแล้ว)' : ''}</div>
+          ${it.reason ? `<div class="reason"><b>ทำไมเสนอ ${FUNNEL[it.funnel].nm}:</b> ${it.reason}</div>` : `<div class="reason" style="border-left-color:var(--brand);background:var(--brand-soft)"><b>ป้ายไฟล์ระบุ ${FUNNEL[it.funnel].nm} ชัดเจน</b> — ป้ายชนะการวิเคราะห์เสมอ ไม่ต้องเดา</div>`}
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="frow">
+          <div class="k">ชั้นกลุ่มเป้าหมาย <small>${it.prov === 'label' ? 'มาจากป้ายไฟล์' : 'ป้ายชนะ AI เสมอ — ไฟล์นี้ไม่มีป้าย จึงใช้สายตา AI'}</small></div>
+          <div class="railsel">
+            <div class="track"></div>
+            <div class="stops">
+              <button class="stop tof ${it.funnel === 'tof' ? 'on' : ''}" onclick="item('${it.id}').funnel='tof';render()"><span class="nm"><i></i>TOF — ลูกค้าใหม่</span><span class="ds">ยิงกว้าง คนไทย 25–65</span></button>
+              <button class="stop mof ${it.funnel === 'mof' ? 'on' : ''}" onclick="item('${it.id}').funnel='mof';render()"><span class="nm"><i></i>MOF — เคยสนใจ</span><span class="ds">เคยกดถูกใจ/ดูวิดีโอ/เข้าเว็บ</span></button>
+              <button class="stop bof ${it.funnel === 'bof' ? 'on' : ''}" onclick="item('${it.id}').funnel='bof';render()"><span class="nm"><i></i>BOF — ใกล้ซื้อ</span><span class="ds">เคยทักแชท/หยิบใส่ตะกร้า</span></button>
+            </div>
+            <div class="railcap">ที่มา: <b>${it.prov === 'label' ? 'ป้ายไฟล์' : 'สายตา AI · มั่นใจ ' + it.conf + '%'}</b> — ถ้าคุณเปลี่ยนชั้น ระบบจะจำไว้เพื่อเสนอแม่นขึ้นครั้งหน้า</div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="k">กลุ่มเป้าหมาย <small>หาจาก: ที่ทีมกำหนด → ของเดิมในบัญชี → สร้างใหม่</small></div>
+          <div class="audgrp">
+            <div class="audline"><span class="audtag">ใส่</span>${inc}</div>
+            <div class="audline"><span class="audtag">ตัดออก</span>${exc}</div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="k">งบ & เวลาเริ่ม</div>
+          <div>
+            <div class="inline-controls">
+              <div class="field"><label>งบ/วัน</label><input class="mono" value="${fmtB(it.budget)}"></div>
+              <div class="field"><label>เริ่ม</label><input class="mono" value="${it.start}" style="width:108px"></div>
+            </div>
+            <div class="hint">จากสูตรตั้งต้น: <b>${it.hint}</b></div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="k">ชื่อแคมเปญ <small>คำนวณอัตโนมัติ</small></div>
+          <div class="namebox mono">${cname(it)}<span class="lock">🔒 มาตรฐานที่ระบบดูแลผลอ่านออก</span></div>
+        </div>
+        <div class="frow">
+          <div class="k">ตรวจก่อนสร้าง</div>
+          <div class="checks">
+            <div class="chk pass"><span class="s">✓</span> ชื่อกับกลุ่มเป้าหมายตรงกัน — ทั้งคู่เป็น ${FUNNEL[it.funnel].nm}</div>
+            <div class="chk pass"><span class="s">✓</span> ไม่ตรงบัญชีดำช่องขาดทุน <small>(TOF-CHAT / TOF-Traffic / MOF-PTM-Renew)</small></div>
+            <div class="chk pass"><span class="s">✓</span> ไม่ซ้ำกับแคมเปญที่มีอยู่</div>
+            <div class="chk info"><span class="s">◦</span> ทางด่วนอัตโนมัติใช้ไม่ได้ — สื่อใหม่ยังไม่เคยพิสูจน์ <small>→ ต้องให้คุณกดเปิดเอง</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" onclick="approve('${it.id}')">อนุมัติ — สร้างแบบพักไว้<small>ไม่ใช้เงินจนกว่าคุณจะกดเปิด</small></button>
+        <button class="btn ghost">แก้แผนก่อน</button>
+        <span class="gap"></span>
+        <button class="btn danger" onclick="reject('${it.id}')">ปฏิเสธ</button>
+      </div>
+    </div>`;
+    return;
+  }
+  if (it.state === 'paused'){
+    $('detailTitle').textContent = 'สร้างแล้ว — พักไว้ รอคุณเปิด';
+    pane.innerHTML = `<div class="plan">
+      <div class="plan-head">
+        <span class="thumb ${it.thumb}">▶</span>
+        <div>
+          <h3 class="mono" style="font-size:13px">${esc(it.fn)}</h3>
+          <div class="chiprow" style="margin-top:7px">${tempChip(it.funnel)} <span class="statechip paused">⏸ พักไว้ — ยังไม่ใช้เงิน</span> ${it.aging >= 3 ? `<span class="aging">⏳ พักมา ${it.aging} วัน — ตัดสินใจ?</span>` : ''}</div>
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="frow">
+          <div class="k">ตรวจกลับจาก Meta <small>read-back หลังสร้างทุกครั้ง</small></div>
+          <div class="checks verifylist">
+            <div class="chk pass"><span class="s">✓</span> Campaign สถานะ PAUSED — ตรงตามที่สั่ง</div>
+            <div class="chk pass"><span class="s">✓</span> Ad Set สถานะ PAUSED · งบ ${fmtB(it.budget)}/วัน ถูกต้อง</div>
+            <div class="chk pass"><span class="s">✓</span> ยิงเข้าเพจ DRJADE ถูกต้อง</div>
+            <div class="chk pass"><span class="s">✓</span> บันทึก audit log แล้ว — ตรวจย้อนหลังได้</div>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="k">ผู้อนุมัติ</div>
+          <div style="font-size:13px">${esc(it.approvedBy || '—')}</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn go" onclick="openFire('${it.id}')">เปิดยิง — เงินเริ่มออก →</button>
+        <button class="btn ghost">ดูใน Ads Manager</button>
+        <span class="gap"></span>
+        <button class="btn danger">ลบทิ้ง</button>
+      </div>
+    </div>`;
+    return;
+  }
+  if (it.state === 'live'){
+    $('detailTitle').textContent = 'เปิดยิงแล้ว — เงินกำลังทำงาน';
+    pane.innerHTML = `<div class="plan">
+      <div class="plan-head">
+        <span class="thumb ${it.thumb}">▶</span>
+        <div>
+          <h3 class="mono" style="font-size:13px"><span class="livedot"></span>&nbsp; ${esc(it.fn)}</h3>
+          <div class="chiprow" style="margin-top:7px">
+            ${tempChip(it.funnel)}
+            ${it.via === 'express'
+              ? `<span class="expressway">⚡ ทางด่วนอัตโนมัติ · ผ่านด่านครบ 5 ข้อ</span>`
+              : `<span class="prov">เปิดโดย ${esc(it.opener || '')}</span>`}
+          </div>
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="frow">
+          <div class="k">ผลเบื้องต้น</div>
+          <div class="kpirow">${(it.kpis || []).map(k => `<div class="kpi"><div class="n mono">${k[0]}</div><div class="l">${k[1]}</div></div>`).join('')}</div>
+        </div>
+        <div class="frow">
+          <div class="k">ขั้นถัดไป</div>
+          <div class="handoff"><b>จบหน้าที่ของ Creator แล้ว</b> — จากนี้ระบบดูแลผล (regen) เฝ้าต่ออัตโนมัติ: ผลแย่จะถูกปิด ผลดีจะถูกเพิ่มงบ ตามเกณฑ์ที่ทีมตั้งไว้ · ทุกอย่างมีบันทึกใน log ตรวจย้อนหลังได้</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn ghost">ดูใน Ads Manager</button>
+        <span class="gap"></span>
+        <button class="btn danger" onclick="pauseBack('${it.id}')">คำสั่งย้อนกลับ — สั่งพัก</button>
+      </div>
+    </div>`;
+    return;
+  }
+}
+
+/* ═══════════ VIEW B render ═══════════ */
+function renderBoard(){
+  const l1 = items.filter(i => ['analyzing','needs'].includes(i.state));
+  const l2 = items.filter(i => ['proposed','creating'].includes(i.state));
+  const l3 = items.filter(i => i.state === 'paused');
+  const l4 = items.filter(i => i.state === 'live');
+  $('c1n').textContent = l1.length; $('c2n').textContent = l2.length;
+  $('c3n').textContent = l3.length; $('c4n').textContent = l4.length + ' วันนี้';
+
+  $('lane1cards').innerHTML = l1.map(it => `
+    <div class="card click" onclick="pick('${it.id}');setView('list')" style="margin-top:8px">
+      <div class="mrow">
+        <span class="thumb ${it.thumb}">${it.dur ? '▶' : '🖼'}${it.dur ? `<span class="dur">${it.dur}</span>` : ''}</span>
+        <div><div class="fn">${esc(it.fn)}</div><div class="meta">${esc(it.up)}</div></div>
+      </div>
+      <div class="chiprow">${it.state === 'analyzing' ? '<span class="analyzing"><span class="spin"></span> กำลังวิเคราะห์…</span>' : '<span class="statechip need">✎ รอแคปชั่น — วิเคราะห์ได้ไม่พอ</span>'}</div>
+    </div>`).join('');
+
+  $('lane2').innerHTML = l2.map(it => it.state === 'creating'
+    ? `<div class="card plan-c"><div class="fn">${esc(it.fn)}</div><div class="chiprow"><span class="analyzing"><span class="spin"></span> กำลังสร้างบน Meta (พัก)…</span></div></div>`
+    : `
+    <div class="card plan-c">
+      <div class="mrow" style="cursor:pointer" onclick="pick('${it.id}');setView('list')">
+        <span class="thumb ${it.thumb}">▶${it.dur ? `<span class="dur">${it.dur}</span>` : ''}</span>
+        <div>
+          <div class="fn">${esc(it.fn)}</div>
+          <div class="chiprow" style="margin-top:4px">${tempChip(it.funnel)} ${provChip(it)}</div>
+        </div>
+      </div>
+      ${it.reason ? `<div class="reason-s"><b>ทำไม ${FUNNEL[it.funnel].nm}:</b> ${it.reason.slice(0, 86)}…</div>` : ''}
+      <div class="specs">
+        <div class="spec"><span class="k">งบ</span><span class="v"><b class="mono">${fmtB(it.budget)}/วัน</b></span></div>
+        <div class="spec"><span class="k">ชื่อ</span><span class="v mono" style="font-size:10px">${cnamePlain(it)}</span></div>
+      </div>
+      <div class="gatecheck"><span class="gc pass">✓ ชื่อ↔กลุ่มตรง</span><span class="gc pass">✓ ไม่ตรงบัญชีดำ</span><span class="gc info">◦ ทางด่วนใช้ไม่ได้</span></div>
+      <div class="cardacts">
+        <button class="btn primary" onclick="approve('${it.id}')">อนุมัติ — สร้างแบบพัก</button>
+        <button class="btn ghost" onclick="pick('${it.id}');setView('list')">ดูแผนเต็ม</button>
+      </div>
+      <div class="subcap">ไม่ใช้เงินจนกว่าคุณจะกดเปิดในขั้นถัดไป</div>
+    </div>`).join('');
+
+  $('lane3').innerHTML = l3.map(it => `
+    <div class="card">
+      <div class="chiprow" style="margin-top:0">${tempChip(it.funnel)} <span class="prov">งบ ${fmtB(it.budget)}/วัน</span> ${it.aging >= 3 ? `<span class="aging">⏳ พักมา ${it.aging} วัน</span>` : ''}</div>
+      <div class="namebox-s mono">${esc(it.fn)}</div>
+      <div class="who">อนุมัติโดย ${esc(it.approvedBy || '—')} · ตรวจกลับจาก Meta ✓</div>
+      <div class="cardacts">
+        <button class="btn primary" style="background:var(--ok)" onclick="openFire('${it.id}')">เปิดยิง →</button>
+        <button class="btn ghost" onclick="pick('${it.id}');setView('list')">ดูรายละเอียด</button>
+      </div>
+    </div>`).join('');
+
+  $('lane4').innerHTML = l4.map(it => `
+    <div class="card live-c">
+      <div style="display:flex;align-items:center;gap:7px"><span class="livedot"></span><span class="fn mono" style="font-size:10.5px">${esc(it.fn)}</span></div>
+      <div class="chiprow">
+        ${tempChip(it.funnel)}
+        ${it.via === 'express' ? '<span class="expressway">⚡ ทางด่วน · ผ่านด่าน 5 ข้อ</span>' : `<span class="prov">เปิดโดย ${esc(it.opener || '')}</span>`}
+      </div>
+      <div class="kpirow-s">${(it.kpis || []).map(k => `<div class="kpi"><div class="n mono">${k[0]}</div><div class="l">${k[1]}</div></div>`).join('')}</div>
+      <div class="who" style="display:flex;justify-content:space-between;align-items:baseline">
+        <span>regen เฝ้าต่ออัตโนมัติ</span>
+        <button class="revlink" onclick="pauseBack('${it.id}')">คำสั่งย้อนกลับ</button>
+      </div>
+    </div>`).join('');
+}
+
+/* ═══════════ มิเตอร์ floor ═══════════ */
+function renderFloor(){
+  const live = f => items.filter(i => i.state === 'live' && i.funnel === f).length + (f === 'tof' ? 3 : f === 'mof' ? 3 : 0);
+  const cells = [['c','TOF','tof'], ['w','MOF','mof'], ['h','BOF','bof']];
+  $('floorRow').innerHTML = cells.map(([cls, nm, f]) => {
+    const n = live(f);
+    const low = n < 2;
+    return `<div class="floorcell ${low ? 'h' : cls}"><span class="t"></span> ${nm} · ${n}${low ? ' <small>ต่ำกว่าขั้นต่ำ</small>' : ''}</div>`;
+  }).join('');
+}
+
+function render(){ renderList(); renderBoard(); renderRail(); renderFloor(); }
+
+/* จำลอง: i3 วิเคราะห์เสร็จเองหลัง 4 วิ */
+setTimeout(() => {
+  const it = item('i3');
+  if (it && it.state === 'analyzing'){
+    Object.assign(it, {
+      state:'proposed', funnel:'tof', prov:'vision', conf:88,
+      reason:'Hook เปิดด้วยอาการปวดเข่า + แนะนำให้รู้จักสินค้า — เนื้อหาสร้างการรับรู้ เหมาะเปิดกลุ่มลูกค้าใหม่',
+      aud:{ inc:[['ยิงกว้าง คนไทย 25–65','ไม่ใส่กลุ่ม — ปล่อย Meta หาเอง',false]], exc:[['กลุ่มอุ่นรวม','365 วัน'],['คนซื้อ 180 วัน','จาก Pixel']] },
+      budget:1000, hint:'TOF Lead เริ่มที่ ฿1,000 ตาม blueprint', start:'พรุ่งนี้ 06:00',
+      promo:'7.7', angle:'Acquire', hook:'PainPoint', fmt:'VDO', adno:'AD000133',
+    });
+    render();
+    toast('knee_pain_hook_final.mp4 วิเคราะห์เสร็จ — เสนอ TOF (88%)');
+  }
+}, 4000);
+
+render();
+</script>

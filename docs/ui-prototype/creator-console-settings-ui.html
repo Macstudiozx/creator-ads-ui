@@ -1,0 +1,511 @@
+<title>Creator Console — ตั้งค่า & ตรวจสุขภาพระบบ</title>
+<style>
+  :root {
+    --desk: #F2F5F6; --sheet: #FFFFFF; --sheet-2: #F8FAFB; --inset: #EBF0F2;
+    --ink: #16262E; --ink-soft: #4E6570; --ink-faint: #7C929C; --ink-mute: #A9BAC2;
+    --line: rgba(22,38,46,.13); --line-soft: rgba(22,38,46,.07); --line-strong: rgba(22,38,46,.26);
+    --brand: #0E7C86; --brand-ink: #0A5A62; --brand-soft: rgba(14,124,134,.09);
+    --cold: #3D7FBF; --cold-soft: rgba(61,127,191,.11);
+    --warm: #C98A2D; --warm-soft: rgba(201,138,45,.13);
+    --hot: #C75A33; --hot-soft: rgba(199,90,51,.11);
+    --ok: #2E7D4F; --ok-soft: rgba(46,125,79,.10);
+    --risk: #B3362B; --risk-soft: rgba(179,54,43,.09);
+    --rail: linear-gradient(90deg, #3D7FBF 0%, #C98A2D 52%, #C75A33 100%);
+    --lock: rgba(22,38,46,.045);
+  }
+  @media (prefers-color-scheme: dark) { :root {
+    --desk: #0E181D; --sheet: #152229; --sheet-2: #1A2A32; --inset: #0F1B21;
+    --ink: #E4ECEF; --ink-soft: #9FB4BC; --ink-faint: #71888F; --ink-mute: #4D6169;
+    --line: rgba(228,236,239,.14); --line-soft: rgba(228,236,239,.07); --line-strong: rgba(228,236,239,.30);
+    --brand: #43B3BD; --brand-ink: #7BD0D8; --brand-soft: rgba(67,179,189,.13);
+    --cold: #5E9AD3; --cold-soft: rgba(94,154,211,.15);
+    --warm: #D9A44E; --warm-soft: rgba(217,164,78,.16);
+    --hot: #DA7A52; --hot-soft: rgba(218,122,82,.15);
+    --ok: #5CBE8A; --ok-soft: rgba(92,190,138,.13);
+    --risk: #E08276; --risk-soft: rgba(224,130,118,.12);
+    --rail: linear-gradient(90deg, #5E9AD3 0%, #D9A44E 52%, #DA7A52 100%);
+    --lock: rgba(228,236,239,.04);
+  } }
+  :root[data-theme="dark"] {
+    --desk: #0E181D; --sheet: #152229; --sheet-2: #1A2A32; --inset: #0F1B21;
+    --ink: #E4ECEF; --ink-soft: #9FB4BC; --ink-faint: #71888F; --ink-mute: #4D6169;
+    --line: rgba(228,236,239,.14); --line-soft: rgba(228,236,239,.07); --line-strong: rgba(228,236,239,.30);
+    --brand: #43B3BD; --brand-ink: #7BD0D8; --brand-soft: rgba(67,179,189,.13);
+    --cold: #5E9AD3; --cold-soft: rgba(94,154,211,.15);
+    --warm: #D9A44E; --warm-soft: rgba(217,164,78,.16);
+    --hot: #DA7A52; --hot-soft: rgba(218,122,82,.15);
+    --ok: #5CBE8A; --ok-soft: rgba(92,190,138,.13);
+    --risk: #E08276; --risk-soft: rgba(224,130,118,.12);
+    --rail: linear-gradient(90deg, #5E9AD3 0%, #D9A44E 52%, #DA7A52 100%);
+    --lock: rgba(228,236,239,.04);
+  }
+  :root[data-theme="light"] {
+    --desk: #F2F5F6; --sheet: #FFFFFF; --sheet-2: #F8FAFB; --inset: #EBF0F2;
+    --ink: #16262E; --ink-soft: #4E6570; --ink-faint: #7C929C; --ink-mute: #A9BAC2;
+    --line: rgba(22,38,46,.13); --line-soft: rgba(22,38,46,.07); --line-strong: rgba(22,38,46,.26);
+    --brand: #0E7C86; --brand-ink: #0A5A62; --brand-soft: rgba(14,124,134,.09);
+    --cold: #3D7FBF; --cold-soft: rgba(61,127,191,.11);
+    --warm: #C98A2D; --warm-soft: rgba(201,138,45,.13);
+    --hot: #C75A33; --hot-soft: rgba(199,90,51,.11);
+    --ok: #2E7D4F; --ok-soft: rgba(46,125,79,.10);
+    --risk: #B3362B; --risk-soft: rgba(179,54,43,.09);
+    --rail: linear-gradient(90deg, #3D7FBF 0%, #C98A2D 52%, #C75A33 100%);
+    --lock: rgba(22,38,46,.045);
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--desk); color: var(--ink); font-family: "Sukhumvit Set","Noto Sans Thai","Thonburi",-apple-system,"Segoe UI",sans-serif; font-size: 14px; line-height: 1.6; }
+  .mono { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-variant-numeric: tabular-nums; }
+  button { font: inherit; }
+
+  .topbar { display: flex; align-items: center; gap: 16px; padding: 0 20px; height: 54px; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 20; background: var(--desk); }
+  .logo { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 14.5px; white-space: nowrap; }
+  .logo .mark { width: 22px; height: 22px; border-radius: 6px; background: var(--rail); display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 800; }
+  nav.tabs { display: flex; gap: 2px; height: 100%; }
+  nav.tabs a { display: flex; align-items: center; padding: 0 13px; color: var(--ink-faint); text-decoration: none; font-size: 13px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  nav.tabs a:hover { color: var(--ink-soft); }
+  nav.tabs a.on { color: var(--ink); border-bottom-color: var(--brand); }
+  .topbar .right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-ink); display: grid; place-items: center; font-size: 11.5px; font-weight: 800; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 18px 20px 60px; }
+
+  /* ── หัวเรื่อง + ผลตรวจรวม ── */
+  .head { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .head h1 { font-size: 20px; font-weight: 800; }
+  .head .sub { font-size: 12px; color: var(--ink-faint); }
+  .head .refresh { margin-left: auto; font-size: 12px; color: var(--ink-faint); display: flex; align-items: center; gap: 8px; }
+  .head .refresh button { background: var(--sheet); border: 1px solid var(--line); color: var(--ink-soft); border-radius: 7px; padding: 5px 11px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .head .refresh button:hover { border-color: var(--line-strong); color: var(--ink); }
+
+  /* ── แถบสุขภาพ (พระเอกของหน้า) ── */
+  .health { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--sheet); margin-bottom: 18px; }
+  .health-top { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--risk-soft); border-bottom: 1px solid var(--line-soft); flex-wrap: wrap; }
+  .health-top .pulse { width: 34px; height: 34px; border-radius: 50%; background: var(--risk); color: #fff; display: grid; place-items: center; font-size: 17px; font-weight: 800; flex-shrink: 0; }
+  .health-top b { font-size: 15px; font-weight: 800; display: block; }
+  .health-top small { font-size: 12px; color: var(--ink-soft); }
+  .health-top .score { margin-left: auto; display: flex; gap: 8px; }
+  .sc { font-size: 12px; font-weight: 800; padding: 3px 12px; border-radius: 999px; }
+  .sc.r { background: var(--risk); color: #fff; }
+  .sc.w { background: var(--warm-soft); color: var(--warm); }
+  .sc.g { background: var(--ok-soft); color: var(--ok); }
+
+  .issue { display: grid; grid-template-columns: 26px 1fr auto; gap: 13px; padding: 13px 18px; border-bottom: 1px solid var(--line-soft); align-items: start; }
+  .issue:last-child { border-bottom: none; }
+  .issue .dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 6px; justify-self: center; }
+  .issue.red .dot { background: var(--risk); box-shadow: 0 0 0 3px var(--risk-soft); }
+  .issue.amber .dot { background: var(--warm); box-shadow: 0 0 0 3px var(--warm-soft); }
+  .issue .body b { font-size: 13.5px; font-weight: 700; display: block; }
+  .issue .body .what { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; line-height: 1.6; }
+  .issue .body .why { font-size: 12px; color: var(--risk); margin-top: 4px; font-weight: 600; }
+  .issue.amber .body .why { color: var(--warm); }
+  .issue .body .ev { font-size: 11.5px; color: var(--ink-mute); margin-top: 5px; background: var(--inset); border-radius: 6px; padding: 5px 9px; display: inline-block; }
+  .issue .fix { text-align: right; }
+  .issue .fix .btn { font-size: 11.5px; padding: 5px 11px; border-radius: 7px; border: 1px solid var(--line); background: var(--sheet); color: var(--ink-soft); font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .issue .fix .btn:hover { border-color: var(--line-strong); color: var(--ink); }
+  .issue .fix .where { font-size: 10.5px; color: var(--ink-mute); margin-top: 5px; }
+
+  /* ── แท็บย่อย ── */
+  .subtabs { display: flex; gap: 3px; background: var(--inset); border-radius: 10px; padding: 3px; margin-bottom: 14px; width: fit-content; flex-wrap: wrap; }
+  .subtabs button { border: none; background: transparent; color: var(--ink-faint); font-size: 12.5px; font-weight: 700; padding: 6px 15px; border-radius: 8px; cursor: pointer; }
+  .subtabs button:hover { color: var(--ink-soft); }
+  .subtabs button.on { background: var(--sheet); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.07); }
+  .subtabs button:focus-visible { outline: 2px solid var(--brand); }
+  .subtabs .warn { color: var(--risk); font-weight: 800; }
+
+  /* ── การ์ดเนื้อหา ── */
+  .panel { background: var(--sheet); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .panel-head { padding: 13px 18px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .panel-head h2 { font-size: 14.5px; font-weight: 800; }
+  .panel-head .lockchip { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--ink-faint); background: var(--lock); border: 1px solid var(--line-soft); padding: 3px 10px; border-radius: 999px; }
+  .srcbar { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--ink-faint); }
+  .srcbar code { background: var(--inset); border-radius: 5px; padding: 2px 8px; font-family: ui-monospace,Menlo,monospace; font-size: 11px; }
+  .srcbar .copy { background: none; border: none; color: var(--brand-ink); font-size: 11px; font-weight: 700; cursor: pointer; padding: 2px 4px; }
+  .srcbar .copy:hover { text-decoration: underline; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th { text-align: left; font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; padding: 9px 18px; background: var(--sheet-2); border-bottom: 1px solid var(--line-soft); white-space: nowrap; }
+  td { padding: 11px 18px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  .tbl-scroll { overflow-x: auto; }
+  td .acct { font-weight: 700; }
+  td .own { font-size: 11px; color: var(--ink-mute); }
+  td.mono, td .mono { font-size: 12px; }
+  .pages { font-size: 11.5px; color: var(--ink-soft); line-height: 1.5; }
+  .pages .n { font-weight: 700; color: var(--ink); }
+  .miss { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; color: var(--risk); background: var(--risk-soft); padding: 2px 9px; border-radius: 999px; }
+  .drift { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; color: var(--warm); background: var(--warm-soft); padding: 2px 9px; border-radius: 999px; }
+  .oktag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; color: var(--ok); background: var(--ok-soft); padding: 2px 9px; border-radius: 999px; }
+
+  /* คำย่อ */
+  .short { display: inline-block; font-family: ui-monospace,Menlo,monospace; font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 7px; background: var(--brand-soft); color: var(--brand-ink); }
+  .temp { display: inline-flex; align-items: center; gap: 6px; padding: 2.5px 10px 2.5px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 800; }
+  .temp .track { width: 24px; height: 4px; border-radius: 2px; background: var(--rail); position: relative; opacity: .9; }
+  .temp .track::after { content: ""; position: absolute; top: -2.5px; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--sheet); }
+  .temp.tof { background: var(--cold-soft); color: var(--cold); } .temp.tof .track::after { left: -2px; background: var(--cold); }
+  .temp.mof { background: var(--warm-soft); color: var(--warm); } .temp.mof .track::after { left: 8px; background: var(--warm); }
+  .temp.bof { background: var(--hot-soft); color: var(--hot); } .temp.bof .track::after { right: -2px; background: var(--hot); }
+  .obj { font-family: ui-monospace,Menlo,monospace; font-size: 11.5px; color: var(--ink-soft); line-height: 1.6; }
+  .obj b { color: var(--ink); }
+
+  /* บัญชีดำ */
+  .black { margin-top: 14px; }
+  .black .panel-head { background: var(--risk-soft); }
+  .brow { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding: 11px 18px; border-bottom: 1px solid var(--line-soft); align-items: center; }
+  .brow:last-child { border-bottom: none; }
+  .brow .combo { font-family: ui-monospace,Menlo,monospace; font-size: 12.5px; font-weight: 800; color: var(--risk); }
+  .brow .ev2 { font-size: 11.5px; color: var(--ink-faint); margin-top: 2px; }
+  .brow .verdict { font-size: 11px; font-weight: 800; color: var(--risk); background: var(--risk-soft); padding: 3px 11px; border-radius: 999px; white-space: nowrap; }
+
+  /* เพดาน */
+  .caps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 12px; padding: 16px 18px; }
+  .cap { border: 1px solid var(--line); border-radius: 11px; padding: 13px 15px; background: var(--sheet-2); }
+  .cap .l { font-size: 11px; font-weight: 700; color: var(--ink-faint); letter-spacing: .05em; text-transform: uppercase; }
+  .cap .v { font-size: 21px; font-weight: 800; margin: 2px 0 1px; }
+  .cap .d { font-size: 11.5px; color: var(--ink-faint); line-height: 1.5; }
+  .cap.live { background: var(--brand-soft); border-color: var(--brand); }
+
+  /* kill switch */
+  .killrow { display: flex; align-items: center; gap: 16px; padding: 15px 18px; border-top: 1px solid var(--line-soft); background: var(--sheet-2); flex-wrap: wrap; }
+  .killrow .txt b { font-size: 13.5px; display: block; }
+  .killrow .txt small { font-size: 11.5px; color: var(--ink-faint); }
+  .switch { margin-left: auto; display: flex; align-items: center; gap: 11px; }
+  .sw { width: 52px; height: 29px; border-radius: 999px; border: none; cursor: pointer; position: relative; transition: background .2s; flex-shrink: 0; background: var(--ok); }
+  .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 23px; height: 23px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+  .sw.off { background: var(--risk); }
+  .sw.off::after { transform: translateX(23px); }
+  .sw:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .swlabel { font-size: 12.5px; font-weight: 800; min-width: 108px; }
+  .swlabel.on { color: var(--ok); } .swlabel.off { color: var(--risk); }
+
+  .note { font-size: 11.5px; color: var(--ink-mute); padding: 11px 18px; border-top: 1px solid var(--line-soft); line-height: 1.6; }
+  .note b { color: var(--ink-soft); }
+
+  .toasts { position: fixed; bottom: 18px; right: 18px; display: grid; gap: 8px; z-index: 60; }
+  .toast { background: var(--ink); color: var(--desk); border-radius: 10px; padding: 10px 15px; font-size: 12.5px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  @media (max-width: 720px) { nav.tabs { display: none; } .issue { grid-template-columns: 20px 1fr; } .issue .fix { grid-column: 2; text-align: left; } }
+</style>
+
+<header class="topbar">
+  <div class="logo"><span class="mark">C</span> Creator Console</div>
+  <nav class="tabs">
+    <a href="#">บอร์ดสายพาน</a>
+    <a href="#">แคมเปญทั้งหมด</a>
+    <a href="#">สูตรตั้งต้น</a>
+    <a class="on" href="#">ตั้งค่า &amp; ตรวจสุขภาพ</a>
+  </nav>
+  <div class="right"><div class="avatar">ตั้ม</div></div>
+</header>
+
+<div class="wrap">
+
+  <div class="head">
+    <div>
+      <h1>ตั้งค่า &amp; ตรวจสุขภาพระบบ</h1>
+      <div class="sub">ค่าทั้งหมดอ่านจากไฟล์กลาง — หน้านี้ดูอย่างเดียว ยกเว้นปุ่มหยุดฉุกเฉิน</div>
+    </div>
+    <div class="refresh">ตรวจล่าสุด 2 นาทีที่แล้ว <button onclick="toast('ตรวจใหม่แล้ว — พบ 2 แดง 3 เหลือง')">↻ ตรวจใหม่</button></div>
+  </div>
+
+  <!-- ═══ แถบสุขภาพ = พระเอกของหน้า ═══ -->
+  <div class="health">
+    <div class="health-top">
+      <div class="pulse">!</div>
+      <div>
+        <b>พบ 5 เรื่องที่ต้องแก้ก่อนเปิดใช้จริง</b>
+        <small>2 เรื่องทำให้เงินหาย · 3 เรื่องทำให้แอดไม่มีใครดูแล</small>
+      </div>
+      <div class="score">
+        <span class="sc r">🔴 2 วิกฤต</span>
+        <span class="sc w">🟠 3 เตือน</span>
+        <span class="sc g">✓ 6 ผ่าน</span>
+      </div>
+    </div>
+
+    <div class="issue red">
+      <span class="dot"></span>
+      <div class="body">
+        <b>Pixel ว่างทั้ง 4 บัญชี</b>
+        <div class="what">คอลัมน์ <code>Data set id</code> ไม่มีค่าสักบัญชี</div>
+        <div class="why">→ BOF สร้างกลุ่ม "คนหยิบใส่ตะกร้า / คนเคยซื้อ" ไม่ได้ เหลือแค่คนทักแชท = กลุ่มปิดการขายไม่ครบ</div>
+        <div class="ev">ตรวจจาก: Ad Account Map — HAPPY Life · อายุยืน · สุขภาพดี · คุยเฟื่อง</div>
+      </div>
+      <div class="fix">
+        <button class="btn" onclick="toast('เปิด Lark Base — Ad Account Map')">เปิดไปกรอก →</button>
+        <div class="where">แก้ที่ Lark Base</div>
+      </div>
+    </div>
+
+    <div class="issue red">
+      <span class="dot"></span>
+      <div class="body">
+        <b>ชื่อชิ้นงานขัดกับตารางบัญชี — OMG / ASTA / LIV / DMK</b>
+        <div class="what">Creative Feed 30 แถวระบุบัญชี <b>HAPPY Life</b> ทั้งหมด แต่ตารางบัญชีบอกคนละที่</div>
+        <div class="why">→ ยิงผิดบัญชี/ผิดเพจ = เงินออกจากกระเป๋าผิดใบ และผิดกฎ "ห้ามใช้เพจข้ามแบรนด์"</div>
+        <div class="ev mono">แถว 4: OMG - HAPPY Life… &nbsp;·&nbsp; ตาราง: OMG → (Mik) คุยเฟื่อง act 1415468563577423</div>
+      </div>
+      <div class="fix">
+        <button class="btn" onclick="toast('ยังไม่ตัดสิน — รอทีมยืนยัน')">ต้องให้ทีมชี้ขาด</button>
+        <div class="where">แก้ชื่อ หรือ แก้ตาราง</div>
+      </div>
+    </div>
+
+    <div class="issue amber">
+      <span class="dot"></span>
+      <div class="body">
+        <b>Angle "KOL" และ "Creative Test" ระบบดูแลผลอ่านไม่ออก</b>
+        <div class="what">ค่าที่อ่านออกมีแค่ <code>Acquire · Educate · Promotion · Sales · Test</code></div>
+        <div class="why">→ 7 แถวจะกลายเป็นแอดกำพร้า: ผลแย่ก็ไม่มีใครปิดให้ วิ่งกินเงินไปเรื่อยๆ</div>
+        <div class="ev mono">แถว 24–30: CLIP…Creative Test · HMO…KOL - synikama / toontn / moeimei02 …</div>
+      </div>
+      <div class="fix">
+        <button class="btn" onclick="toast('คัดลอกแล้ว: เพิ่ม KOL ลง Angle_Type ใน regen')">ดูวิธีแก้</button>
+        <div class="where">เพิ่ม enum ที่ regen</div>
+      </div>
+    </div>
+
+    <div class="issue amber">
+      <span class="dot"></span>
+      <div class="body">
+        <b>รหัส AD ยังเป็น <code>ADTBD</code> ทั้ง 30 แถว</b>
+        <div class="what">รหัสซ้ำกันหมด — ระบบจับคู่ไฟล์ที่อัปโหลดกับแถวไม่ได้</div>
+        <div class="why">→ ต้องให้ Agent บรีฟใส่รหัสจริงก่อน ไม่งั้นทุกไฟล์จะต้องจับคู่ด้วยมือ</div>
+        <div class="ev mono">ทั้ง 30 แถว: … - ADTBD - V01 - 03/07/26</div>
+      </div>
+      <div class="fix">
+        <button class="btn" onclick="toast('ส่งข้อความถึง Agent บรีฟแล้ว')">แจ้ง Agent บรีฟ</button>
+        <div class="where">แก้ที่ต้นน้ำ</div>
+      </div>
+    </div>
+
+    <div class="issue amber">
+      <span class="dot"></span>
+      <div class="body">
+        <b>กับดักคำว่า "เปิด" ในชื่อชิ้นงาน</b>
+        <div class="what">ระบบดูแลผลตั้งไว้ว่า ชื่อที่มีคำว่า <code>เปิด</code> / <code>Awareness</code> = ข้ามไป ไม่ดูแล</div>
+        <div class="why">→ ชุดเก่าเคยใช้ "เปิดปัญหา" เป็น hook — ถ้ากลับมาใช้อีกจะเกิดแอดกำพร้าทันที</div>
+        <div class="ev">ชุดปัจจุบัน 30 แถว: ✓ ปลอดภัย ใช้ Topic อังกฤษหมด — แต่ต้องเตือน Agent บรีฟไว้</div>
+      </div>
+      <div class="fix">
+        <button class="btn" onclick="toast('คัดลอกกฎแล้ว — ส่งให้ Agent บรีฟ')">คัดลอกกฎ</button>
+        <div class="where">กติกาการตั้งชื่อ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ แท็บย่อย ═══ -->
+  <div class="subtabs">
+    <button class="on" onclick="show('p1',this)">1 · บัญชี &amp; เพจ <span class="warn">2</span></button>
+    <button onclick="show('p2',this)">2 · คำย่อ &amp; Objective</button>
+    <button onclick="show('p3',this)">3 · เพดาน &amp; ความปลอดภัย</button>
+  </div>
+
+  <!-- ══ 1. บัญชี & เพจ ══ -->
+  <div id="p1">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>ตารางบัญชี &amp; เพจ</h2>
+        <span class="lockchip">🔒 อ่านอย่างเดียว</span>
+        <div class="srcbar">
+          มาจาก <code>regen/config/accounts/*.yaml</code>
+          <button class="copy" onclick="toast('คัดลอก path แล้ว')">คัดลอก</button>
+        </div>
+      </div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>บัญชี</th><th>สินค้า</th><th>ACT ID</th><th>เพจ</th><th>Pixel</th><th>สถานะ</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="acct">(Mac) HMO - HAPPY Life</span><div class="own">ดูแลโดย Mac</div></td>
+              <td>HMO</td>
+              <td class="mono">603593437444446</td>
+              <td class="pages"><span class="n">Dr.Jade Happy Life</span><br>246993791830119</td>
+              <td><span class="miss">ว่าง</span></td>
+              <td><span class="drift">⚠ ถูกใช้ยิงสินค้าอื่นด้วย</span></td>
+            </tr>
+            <tr>
+              <td><span class="acct">(Mac) HMO - อายุยืน</span><div class="own">ดูแลโดย Mac</div></td>
+              <td>HMO</td>
+              <td class="mono">1550298176199324</td>
+              <td class="pages"><span class="n">6 เพจ</span> — อายุยืนแบบมีคุณภาพ, โปรไบโอติก ลำไส้ดี, แก้ท้องผูก, กรดไหลย้อน, เรอเปรี้ยว, ท้องอืด</td>
+              <td><span class="miss">ว่าง</span></td>
+              <td><span class="drift">⚠ 6 เพจ — ต้องระบุว่าใช้เพจไหน</span></td>
+            </tr>
+            <tr>
+              <td><span class="acct">(Mik) ASTA - สุขภาพดี</span><div class="own">ดูแลโดย Mik</div></td>
+              <td>ASTA</td>
+              <td class="mono">828326256875829</td>
+              <td class="pages"><span class="n">สุขภาพดีกับหมอเจด</span><br>561045733764039</td>
+              <td><span class="miss">ว่าง</span></td>
+              <td><span class="oktag">✓ ตารางครบ</span></td>
+            </tr>
+            <tr>
+              <td><span class="acct">(Mik) OMG - คุยเฟื่อง</span><div class="own">ดูแลโดย Mik</div></td>
+              <td>OMG</td>
+              <td class="mono">1415468563577423</td>
+              <td class="pages"><span class="n">หมอเจด คุยเฟื่องเรื่องปากท้อง</span><br>617344948123314</td>
+              <td><span class="miss">ว่าง</span></td>
+              <td><span class="oktag">✓ ตารางครบ</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <b>ทำไมแก้ที่นี่ไม่ได้:</b> เลข ACT/Page พิมพ์ผิด 1 ตัว = ยิงเงินเข้าบัญชีคนอื่น — ของแบบนี้ควรผ่าน git ที่มีคนรีวิวและถอยกลับได้ ไม่ใช่ฟอร์มบนเว็บ<br>
+        <b>ตารางใน Lark</b> เป็นมุมมองของคน — ระบบใช้ไฟล์ config เป็นความจริง และหน้านี้จะเตือนเมื่อสองที่ไม่ตรงกัน
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 2. คำย่อ & Objective ══ -->
+  <div id="p2" style="display:none">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>คำย่อในชื่อ → การตั้งค่าจริงบน Meta</h2>
+        <span class="lockchip">🔒 อ่านอย่างเดียว</span>
+        <div class="srcbar">
+          มาจาก <code>regen/config/accounts/_base.yaml → funnel.*</code>
+          <button class="copy" onclick="toast('คัดลอก path แล้ว')">คัดลอก</button>
+        </div>
+      </div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>คำย่อในชื่อ</th><th>ชั้น</th><th>ตั้งค่าจริงบน Meta</th><th>ใช้กับ</th><th>งบตั้งต้น</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="short">ENG-LEAD</span></td>
+              <td><span class="temp tof"><span class="track"></span> TOF</span></td>
+              <td class="obj"><b>OUTCOME_ENGAGEMENT</b><br>+ LEAD_GENERATION<br>+ MESSENGER</td>
+              <td>หาลูกค้าใหม่ — ให้ทักแชท</td>
+              <td class="mono">฿3,000</td>
+            </tr>
+            <tr>
+              <td><span class="short">ENG-CHAT</span></td>
+              <td><span class="temp mof"><span class="track"></span> MOF</span> <span class="temp bof"><span class="track"></span> BOF</span></td>
+              <td class="obj"><b>OUTCOME_ENGAGEMENT</b><br>+ CONVERSATIONS<br>+ MESSENGER</td>
+              <td>คนเคยสนใจ / ใกล้ซื้อ — คุยต่อ<br><span style="color:var(--risk);font-weight:700">⚠ ใช้กับ TOF ไม่ได้ (อยู่ในบัญชีดำ)</span></td>
+              <td class="mono">฿3,000–4,000</td>
+            </tr>
+            <tr>
+              <td><span class="short">Sales-PTM</span></td>
+              <td><span class="temp bof"><span class="track"></span> BOF</span></td>
+              <td class="obj"><b>OUTCOME_SALES</b><br>+ MESSAGING_PURCHASE_CONVERSION<br>+ MESSENGER</td>
+              <td>ปิดการขายกับคนที่เคยทัก</td>
+              <td class="mono">฿8,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <b>ทุกตัวใช้ร่วมกัน:</b> billing = IMPRESSIONS · bid = LOWEST_COST_WITHOUT_CAP · งบแบบ CBO · ปุ่ม = MESSAGE_PAGE · อายุ 25–65 · ไทย<br>
+        <b>ตัวเลขงบ</b> มาจาก blueprint ที่พิสูจน์ด้วยเงินจริง 228 แคมเปญ — แต่ระบบจะเสนอตามสูตรตั้งต้นจากประวัติ 90 วันของบัญชีนั้นๆ ก่อนเสมอ
+      </div>
+    </div>
+
+    <div class="panel black">
+      <div class="panel-head">
+        <h2>🚫 บัญชีดำ — ห้ามสร้างเด็ดขาด</h2>
+        <span class="lockchip">พิสูจน์ด้วยเงินจริงแล้วว่าขาดทุน</span>
+      </div>
+      <div class="brow">
+        <div>
+          <div class="combo">TOF + ENG-CHAT (Conversations)</div>
+          <div class="ev2">35 แคมเปญ · เผาไป ~฿483,000 · ROAS 0.96 — ขาดทุนต่อเนื่อง</div>
+        </div>
+        <span class="verdict">ระบบจะเตือน + ขอยืนยันซ้ำ</span>
+      </div>
+      <div class="brow">
+        <div>
+          <div class="combo">TOF + Traffic objective</div>
+          <div class="ev2">~฿141,000 · ROAS 0.94 — Traffic ไม่เวิร์กกับ CTM ในไทย</div>
+        </div>
+        <span class="verdict">ระบบจะเตือน + ขอยืนยันซ้ำ</span>
+      </div>
+      <div class="brow">
+        <div>
+          <div class="combo">MOF + PTM Renew</div>
+          <div class="ev2">ขาดทุนหนักสุดที่เคยวัดได้ ~฿225,000/เดือน · ROAS 1.37</div>
+        </div>
+        <span class="verdict">ระบบจะเตือน + ขอยืนยันซ้ำ</span>
+      </div>
+      <div class="note">ระบบไม่บล็อกตายตัว — ถ้าทีมยืนยันซ้ำก็ทำให้ แต่จะบันทึกไว้ใน log ว่าใครสั่ง ทั้งที่รู้ตัวเลข</div>
+    </div>
+  </div>
+
+  <!-- ══ 3. เพดาน & ความปลอดภัย ══ -->
+  <div id="p3" style="display:none">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>เพดานและกำแพงกันเงินรั่ว</h2>
+        <span class="lockchip">🔒 อ่านอย่างเดียว</span>
+        <div class="srcbar">
+          มาจาก <code>config/creator.yaml</code>
+          <button class="copy" onclick="toast('คัดลอก path แล้ว')">คัดลอก</button>
+        </div>
+      </div>
+      <div class="caps">
+        <div class="cap live">
+          <div class="l">เงินเปิดเองต่อวัน</div>
+          <div class="v mono">฿480 <span style="font-size:13px;color:var(--ink-faint);font-weight:600">/ 2,000</span></div>
+          <div class="d">ใช้ไปแล้ววันนี้ · ต่อบัญชี</div>
+        </div>
+        <div class="cap live">
+          <div class="l">จำนวนเปิดเองต่อรอบ</div>
+          <div class="v">1 <span style="font-size:13px;color:var(--ink-faint);font-weight:600">/ 3 ตัว</span></div>
+          <div class="d">เกินแล้วหยุด + แจ้งทีม</div>
+        </div>
+        <div class="cap">
+          <div class="l">ขั้นต่ำโฆษณาที่ต้องวิ่ง</div>
+          <div class="v">2 <span style="font-size:13px;color:var(--ink-faint);font-weight:600">ตัว/ชั้น</span></div>
+          <div class="d">ต่ำกว่านี้ = เติมฉุกเฉิน</div>
+        </div>
+        <div class="cap">
+          <div class="l">เป้าใช้จ่ายเดือนนี้</div>
+          <div class="v mono">฿300,000</div>
+          <div class="d">เพดาน ฿12,000/วัน · ระบบเฉลี่ยเพซเอง</div>
+        </div>
+      </div>
+
+      <div class="killrow">
+        <div class="txt">
+          <b>ปุ่มหยุดฉุกเฉิน (kill-switch)</b>
+          <small>กดแล้วระบบเลิกเปิดยิงเองทันที — ทุกงานกลับไปรอคนอนุมัติ · ของที่สร้างไว้เป็นสถานะพักอยู่แล้ว ไม่กินเงิน</small>
+        </div>
+        <div class="switch">
+          <span class="swlabel on" id="swl">ทางด่วนเปิดอยู่</span>
+          <button class="sw" id="sw" onclick="toggleKill()" aria-label="สลับปุ่มหยุดฉุกเฉิน"></button>
+        </div>
+      </div>
+      <div class="note">
+        <b>นี่คือปุ่มเดียวในหน้านี้ที่กดได้จริง</b> — เพราะตอนฉุกเฉินต้องหยุดได้ทันที ไม่มีเวลาไปแก้ไฟล์แล้ว push<br>
+        ค่าอื่นทั้งหมดแก้ผ่าน git เท่านั้น: <b>แก้นานๆ ครั้ง แต่พังแรง</b> → ควรมีคนรีวิวและถอยกลับได้
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+function show(id, btn){
+  ['p1','p2','p3'].forEach(p => document.getElementById(p).style.display = p === id ? '' : 'none');
+  document.querySelectorAll('.subtabs button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+let killOn = false;
+function toggleKill(){
+  killOn = !killOn;
+  const sw = document.getElementById('sw'), l = document.getElementById('swl');
+  sw.classList.toggle('off', killOn);
+  l.textContent = killOn ? 'หยุดฉุกเฉินแล้ว' : 'ทางด่วนเปิดอยู่';
+  l.className = 'swlabel ' + (killOn ? 'off' : 'on');
+  toast(killOn ? '🛑 หยุดทางด่วนแล้ว — ทุกงานกลับไปรอคนอนุมัติ' : '✓ เปิดทางด่วนอีกครั้ง — ยังอยู่ในเพดาน 2,000฿/วัน');
+}
+function toast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 3600);
+}
+</script>

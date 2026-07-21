@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+.env.local
+.env*.local
+.env.engine
+.env.engine.*
+!.env.local.example
+!.env.engine.example
+
+# Generated/runtime output
+output/
+videos/
+images/
+*.log
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Package managers
+.pnpm-store/

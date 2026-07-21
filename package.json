@@ -1,0 +1,45 @@
+{
+  "name": "creator-ads-ui",
+  "version": "0.1.0",
+  "description": "Cloneable Creator Ads console for Hermes Agent users, Supabase creative uploads, and paused-first Meta Ads workflows.",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Macstudiozx/creator-ads-ui.git"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "mock:progress": "tsx scripts/mock-progress.ts",
+    "mock:engine": "python3 scripts/mock_engine.py",
+    "seed:real-config": "python3 scripts/seed_real_config.py",
+    "import:creatives": "python3 scripts/import_creatives_csv.py",
+    "engine:map": "python3 scripts/engine_map_batch.py",
+    "engine:approve": "python3 scripts/engine_process_approval.py",
+    "engine:worker": "python3 scripts/engine_worker.py",
+    "ready:prod": "python3 scripts/check_production_ready.py",
+    "ready:prod:doppler": "HOME=/Users/macstudiozx doppler run -- npm run ready:prod",
+    "engine:worker:prod": "HOME=/Users/macstudiozx doppler run -- npm run engine:worker -- --execute"
+  },
+  "dependencies": {
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest",
+    "tsx": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+  }
+}
